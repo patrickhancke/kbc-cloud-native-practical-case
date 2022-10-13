@@ -1,10 +1,10 @@
 # Lab 01 - Spring Boot
 In the root folder of this project, create a Spring Boot application module that will later serve our ``ezGroceries`` API. We will start out minimalistic and gradually add dependencies and capabilities.
 
-In this short lab we want to focus on making sure the applications start successfully and serves the Spring Boot Actuator endpoints.
+In this introductory lab we want to focus on making sure the application starts successfully and serves the Spring Boot Actuator endpoints.
 
 ## Create the new project
-From Intellij, choose ``File`` > ``New`` > ``Project...``. Fill the details as shown in the below screenshot:
+From Intellij, choose ``File`` > ``New`` > ``Project...`` and fill the details as shown in the below screenshot:
 
 ![Spring Initializr step 1](lab-01-spring-initializr-1.png "Step 1")
 
