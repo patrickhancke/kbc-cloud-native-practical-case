@@ -69,8 +69,11 @@ Request: ``POST http://localhost:8080/shopping-lists``
 
 Request body (json):
 ```json
-{"name": "Stephanie's birthday"}
+{
+  "name": "Stephanie's birthday"
+}
 ```
+
 Response status: ``201 CREATED``
 
 Response body: empty
@@ -79,15 +82,110 @@ Response body: empty
 
 Verification: use ``Postman`` to create a new shopping list.
 
-## Add Cocktails to Shopping List
+## Add Cocktail to Shopping List
+
+This API call links a previously created ``Cocktail`` resource to the ``ShoppingList`` resource.
+
 Request: ``POST http://localhost:8080/shopping-lists/{shoppingListId}/cocktails``
 
 Request body (json):
+
 ```json
-{"cocktailId": "23b3d85a-3928-41c0-a533-6538a71e17c4"}
+{
+  "cocktailId": "23b3d85a-3928-41c0-a533-6538a71e17c4"
+}
 ```
+
 Response status: ``201 CREATED``
 
 Response body: empty
 
 **NOTE**: the response headers must contain the ``Location`` header and point to the newly created resource.
+
+## Get Shopping List
+
+This method will provide the main (currently still very simple) functionality of our API, it will return a distinct set
+of ingredients derived from all the cocktails that have been added to this shopping list.
+
+**NOTE**: we currently only return some dummy generated data, just focus on getting the contract right.
+
+Request: ``GET http://localhost:8080/shopping-lists/{shoppingListId}``
+
+Response status: ``200 OK``
+
+Response body:
+
+```json
+{
+  "shoppingListId": "90689338-499a-4c49-af90-f1e73068ad4f",
+  "name": "Stephanie's birthday",
+  "ingredients": [
+    "Tequila",
+    "Triple sec",
+    "Lime juice",
+    "Salt",
+    "Blue Curacao"
+  ]
+}
+```
+
+## Get all Shopping Lists
+
+Request: ``GET http://localhost:8080/shopping-lists``
+
+Response status: ``200 OK``
+
+Response body:
+
+```json
+[
+  {
+    "shoppingListId": "4ba92a46-1d1b-4e52-8e38-13cd56c7224c",
+    "name": "Stephanie's birthday",
+    "ingredients": [
+      "Tequila",
+      "Triple sec",
+      "Lime juice",
+      "Salt",
+      "Blue Curacao"
+    ]
+  },
+  {
+    "shoppingListId": "6c7d09c2-8a25-4d54-a979-25ae779d2465",
+    "name": "My Birthday",
+    "ingredients": [
+      "Tequila",
+      "Triple sec",
+      "Lime juice",
+      "Salt",
+      "Blue Curacao"
+    ]
+  }
+]
+```
+
+# Testing
+
+Add Spring MockMVC tests for all the API calls we just implemented. At the minimum, assert the following for each of
+them:
+
+* Response status
+* Content type
+* JSON response body attributes
+
+# API docs
+
+To document and to be able to interactively test our API we're going to add Open API (Swagger) documentation.
+
+Follow the [instructions for Spring Doc](https://springdoc.org/) to set it up. The only thing you need to do is include
+the ``org.springdoc.springdoc-openapi-ui`` dependency.
+
+Verification: open the [Swagger home page](http://localhost:8080/swagger-ui/index.html) in your browser. It shows a list
+of Controllers and the API methods you implemented.
+
+# Commit and tag your work
+
+Make sure to add and commit all your files at least once at the end of every lab. After the lab has been completed,
+please tag it with the appropriate lab number:
+
+``git tag -a lab02 -m "lab02"``
