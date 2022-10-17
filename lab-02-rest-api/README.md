@@ -7,12 +7,12 @@ Other technical decisions that were taken during the design include:
 
 * Only JSON representation will be supported
 * OpenAPI docs, provided by [Swagger](https://swagger.io/specification/), will be provided alongside the API for contract documentation and interactive explorability
-* UUID's will be used to uniquely identify every resource
+* UUID's will be used to uniquely identify every resource, use the ``java.util.UUID`` type.
 
-# Endpoint for searching cocktails
+# Cocktail API
 These are the requirements for the endpoint:
 * HTTP GET ``/cocktails``
-* it must support a query parameter named ``search`` which accepts a String value. This parameter acts as a filter to restrict the number of returned cocktails
+* it must support a query parameter named ``search`` which accepts a ``String`` value. This parameter acts as a filter to restrict the number of returned cocktails
 * it must return the cocktail resource(s) in ``json`` format
 
 Sample request: ``GET http://localhost:8080/cocktails?search=Russian``
@@ -57,7 +57,37 @@ Guidelines for getting started:
 * hard-code the 2 cocktail resources from the above sample and return them from the method you just declared
 * add logging to your method by declaring an ``org.slf4j.Logger`` in your controller:
 ```java
-private static final Logger log = LoggerFactory.getLogger(MyClass.class);
+private static final Logger log = LoggerFactory.getLogger(MyController.class);
 ```
+or use [Project Lombok](https://projectlombok.org/) if you prefer.
 
 Verification: navigate to http://localhost:8080/cocktails?search=Russian and compare the response to the above sample. It must match exactly.
+
+# Shopping List API
+## Create a new Shopping List
+Request: ``POST http://localhost:8080/shopping-lists``
+
+Request body (json):
+```json
+{"name": "Stephanie's birthday"}
+```
+Response status: ``201 CREATED``
+
+Response body: empty
+
+**NOTE**: the response headers must contain the ``Location`` header and point to the newly created resource.
+
+Verification: use ``Postman`` to create a new shopping list.
+
+## Add Cocktails to Shopping List
+Request: ``POST http://localhost:8080/shopping-lists/{shoppingListId}/cocktails``
+
+Request body (json):
+```json
+{"cocktailId": "23b3d85a-3928-41c0-a533-6538a71e17c4"}
+```
+Response status: ``201 CREATED``
+
+Response body: empty
+
+**NOTE**: the response headers must contain the ``Location`` header and point to the newly created resource.
