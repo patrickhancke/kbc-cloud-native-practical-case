@@ -191,20 +191,25 @@ In this case, we'll use ``HSQLDB``, add this dependency:
 </dependency>
 ```
 
-To be able to easily switch we'll use Spring's Profile support. Alongside the application.properties provide a new file
-called application-hsqldb.properties, contents:
+To be able to easily switch we'll use Spring's Profile support. Alongside the ``application.properties`` provide a new
+file
+called ``application-hsqldb.properties`` with content:
 
+```properties
 spring.datasource.url=jdbc:hsqldb:mem:testdb;sql.syntax_pgs=true
 spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
+```
 
-This is a convenient Spring naming convention, if we start our application and set "hsqldb" as the active profile these
-properties will override the ones from the standard application.properties.
+This is a convenient Spring profile naming convention: if we start our application and set ``hsqldb`` as the active
+profile, these
+properties will override the ones from the standard ``application.properties`` file.
 
-You can test running the application with this profile, in IntelliJ you can add an extra run configuration by
-duplicating the ShoppingListApplication one and setting "hsqldb" in the active profiles textbox.
-Commit and tag your work
+You can test running the application with this profile: in IntelliJ you can add an extra run configuration by
+duplicating the ``ShoppingListApplication`` one and setting ``hsqldb`` in the active profiles text box.
 
-Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been completed
-completely please tag it with the appropriate lab number:
+## Commit and tag your work
 
-git tag -a lab05 -m "lab05"
+Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been
+completed, please tag it with the appropriate lab number:
+
+``git tag -a lab05 -m "lab05"``
