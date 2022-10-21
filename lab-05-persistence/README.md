@@ -111,7 +111,7 @@ Example:
 
 To interact with our database it's convenient to use an SQL client for troubleshooting and interacting with our data.
 For example in Intellij we can easily set up a datasource to connect to our local Postgres instance:
-![Postgres Data Source](lab-05-data-source.png "Postgres Data Source")
+![Postgres Data Source](lab-05-data-source.png)
 
 **NOTE**: Make sure to first download the appropriate drivers, set up in other SQL clients will be very similar.
 
@@ -174,7 +174,7 @@ many-to-many relationship between cocktails and shopping lists.
 
 Add appropriate Flyway migration scripts to end up with this schema, find out how to best define the foreign key
 relationships in postgres:
-![Postgres DB schema](lab-05-shopping-list-schema.png "Postgres DB schema")
+![Postgres DB schema](lab-05-shopping-list-schema.png)
 
 ## Embedded database
 
@@ -205,7 +205,9 @@ profile, these
 properties will override the ones from the standard ``application.properties`` file.
 
 You can test running the application with this profile: in IntelliJ you can add an extra run configuration by
-duplicating the ``ShoppingListApplication`` one and setting ``hsqldb`` in the active profiles text box.
+duplicating the ``EzGroceriesShoppingListApplication`` one and setting ``hsqldb`` in the active profiles text box:
+
+![Intellij Run configuration](lab-05-Intellij-run-configuration.png)
 
 ## Commit and tag your work
 
