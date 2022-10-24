@@ -1,10 +1,12 @@
 # KBC cloud native training: practical case
-
 This is a workshop that combines some cloud native theoretical and practical modules. It is focused on a Spring Boot
 application.
 
-## Prerequisites
+Many thanks to [Nick De Cock](https://github.com/nickdkcronos) who provided the first version of this workshop in
+2019. [Patrick Hancke](https://github.com/patrickhancke) reviewed and updated it to be in line with the most recent
+Spring Boot version.
 
+## Prerequisites
 Following tools should already be available / installed
 
 * GitHub account
@@ -13,7 +15,6 @@ Following tools should already be available / installed
 * IntelliJ
 
 ## Business Case
-
 Our fictional company ``ezGroceries`` wants to provide all sorts of Mobile apps to help people during their grocery
 shopping.
 
@@ -30,18 +31,15 @@ They plan to combine these two APIs in one of their own. They have a brand new C
 that they want to leverage.
 
 ## GitHub
-
 Create a free private [github account](https://github.com/) and fork this repository to start implementing the practical
 case. Add the instructor as a collaborator on your fork.
 
 ## Labs
-
 Refer to detailed instructions in each subfolder.
 
 Try to get as far as possible, lab 6 can be considered as the minimal target.
 
 ## Tips
-
 Use git to your advantage: branch, make frequent commits, push to github etc..
 
 Refer to the Spring Core course for any practical details regarding Spring.
