@@ -1,14 +1,15 @@
 # Lab 05 - Persistence Capability
-
 For implementing our Shopping List functionality we will need some kind of persistence. In this lab we're first going to
 add the technical capability of talking to a database from our Spring Boot app.
 
-We'll choose Postgres as a common database solution.
+We'll choose ``Postgres`` as a common database solution.
 
 ## Run Postgres locally
 
-When developing locally we'll run postgres through a docker container, this can be easily done by running the below
-command. The first time we run this, the postgres docker image will be downloaded:
+**Question**: is this possible / allowed on a KBC Macbook?
+
+When developing locally we'll run ``Postgres`` through a docker container, this can be easily done by running the below
+command. The first time we run this, the ``postgres`` docker image will be downloaded:
 
 ``docker run -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres``
 
@@ -29,11 +30,10 @@ For more information about the usage of this Docker image see: https://hub.docke
 
 ## Connect our Spring Boot application
 
-Add a postgres Maven dependency for the JDBC driver, check for the most recent
+Add a ``postgres`` Maven dependency for the JDBC driver, check for the most recent
 version [here](https://mvnrepository.com/artifact/org.postgresql/postgresql):
 
 ```xml
-
 <dependency>
     <groupId>org.postgresql</groupId>
     <artifactId>postgresql</artifactId>
@@ -44,7 +44,6 @@ version [here](https://mvnrepository.com/artifact/org.postgresql/postgresql):
 We'll use Spring Data JPA, add the appropriate Spring Boot starter:
 
 ```xml
-
 <dependency>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -84,9 +83,7 @@ your ``application.properties`` file:
 management.endpoint.health.show-details=always
 ```
 
-Restart your application and go to the health endpoint:
-
-http://localhost:8080/actuator/health
+Restart your application and go to the health endpoint http://localhost:8080/actuator/health
 
 You'll see that now our health endpoint also includes database connectivity out of the box, neat!
 
@@ -110,13 +107,12 @@ Example:
 ## SQL Client (Optional)
 
 To interact with our database it's convenient to use an SQL client for troubleshooting and interacting with our data.
-For example in Intellij we can easily set up a datasource to connect to our local Postgres instance:
+For example in Intellij we can easily set up a datasource to connect to our local ``Postgres`` instance:
 ![Postgres Data Source](lab-05-data-source.png)
 
 **NOTE**: Make sure to first download the appropriate drivers, set up in other SQL clients will be very similar.
 
 ## Flyway
-
 Version controlling a database schema is always a challenge. In our application we want to tightly control and evolve
 our database schema alongside our code.
 
@@ -127,7 +123,6 @@ the [Spring Boot integration](https://flywaydb.org/documentation/usage/plugins/s
 Let's start by adding Flyway to our project, we need to add this dependency:
 
 ```xml
-
 <dependency>
     <groupId>org.flywaydb</groupId>
     <artifactId>flyway-core</artifactId>
@@ -139,7 +134,6 @@ various [configuration options](https://docs.spring.io/spring-boot/docs/current/
 .
 
 ## Shopping List Schema
-
 Let's define our Shopping List schema using flyway migration scripts, the first script is provided:
 
 Location: ``src/main/resources/db/migration/V0.1__Add_Shopping_List_Table.sql``
@@ -177,14 +171,12 @@ relationships in postgres:
 ![Postgres DB schema](lab-05-shopping-list-schema.png)
 
 ## Embedded database
-
 To keep development options open we also want to enable quick local development by adding the option to start our
 application using an embedded in-memory database.
 
 In this case, we'll use ``HSQLDB``, add this dependency:
 
 ```xml
-
 <dependency>
     <groupId>org.hsqldb</groupId>
     <artifactId>hsqldb</artifactId>
@@ -210,7 +202,6 @@ duplicating the ``EzGroceriesShoppingListApplication`` one and setting ``hsqldb`
 ![Intellij Run configuration](lab-05-Intellij-run-configuration.png)
 
 ## Commit and tag your work
-
 Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been
 completed, please tag it with the appropriate lab number:
 
