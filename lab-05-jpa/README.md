@@ -1,16 +1,13 @@
-# Lab 06 - Shopping List JPA
-
+# Lab 05 - Shopping List JPA
 With our new persistence capability we can finally provide a real implementation for our Shopping List API.
 
 ## JPA Entities
-
 Create the ``Cocktail`` and ``ShoppingList`` JPA entities to enable interaction with the database schema we created in
 the previous lab.
 
 A partial example for the ``CocktailEntity`` class:
 
 ```java
-
 @Entity
 @Table(name = "cocktail")
 public class CocktailEntity {
@@ -22,7 +19,6 @@ public class CocktailEntity {
 column. To easily accomplish this we can use a custom JPA converter, you can add this one to your project:
 
 ```java
-
 @Converter
 public class StringSetConverter implements AttributeConverter<Set<String>, String> {
 
@@ -53,13 +49,12 @@ To instruct JPA to use this converter on your ``CocktailEntity``, add this annot
 private Set<String> ingredients;
 ```
 
-##Spring Data JPA Repositories
+## Spring Data JPA Repositories
 Add 2 Spring Data JPA repositories for both entities. We already added this dependency in the persistence lab. Refer to
 the [documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.definition) for a
 refresh on how to define JPA repositories.
 
 ### Service tier
-
 There are multiple ways to design the interaction of API calls with database entities. To keep things simple we're going
 to introduce a traditional Service layer.
 
@@ -68,7 +63,6 @@ A typical API call will go through Controller -> Service -> Repository (classic 
 Service definition example:
 
 ```java
-
 @Service
 public class ShoppingListService {
     private final ShoppingListRepository shoppingListRepository;
@@ -84,13 +78,11 @@ public class ShoppingListService {
 ```
 
 ## Cocktail API
-
 A very important change to our application involves the on-the-fly persisting of all Cocktails returned from the search,
 we don't want to store all the attributes, we just want to assign a UUID for every unique Cocktail and persist this to
 our database.
 
 ### Search cocktails
-
 Refactor our current implementation:
 
 * map all the returned cocktails from the ``CocktailDBClient`` using their ``idDrink`` attributes to
@@ -132,30 +124,24 @@ private List<CocktailResource> mergeAndTransform(List<CocktailDBResponse.DrinkRe
 ```
 
 ## Shopping List API
-
 ### Create a new Shopping List
-
 Refactor the ``ShoppingListController`` to have an autowired reference to the ``ShoppingListService`` and invoke the
 appropriate service layer method. Replace the dummy response resources with the actual result of the creation.
 
 ### Add Cocktails to Shopping List
-
 Replace the dummy resources and provide a real persistence implementation. This will include a service layer that will
 take care of linking cocktails with a specific shopping list.
 
 ### Get a Shopping List
-
 Replace the dummy resources and provide a real persistence implementation.
 
 This is also the API where most of our business value is going to happen! Implement the logic to retrieve all the
 Cocktails from the given Shopping List and extract the distinct ingredients to include them in the response body.
 
 ### Get all Shopping Lists
-
 Replace the dummy resources and provide a real persistence implementation.
 
 ## Testing
-
 Refactor our ``MockMvc`` tests to include a mocked ``ShoppingListService`` bean and add appropriate expectations to the
 mocks.
 
@@ -164,7 +150,4 @@ without extensive Spring support: simple Mockito mocks will do.
 
 ## Commit and tag your work
 
-Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been
-completed, please tag it with the appropriate lab number:
-
-``git tag -a lab06 -m "lab06"``
+Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

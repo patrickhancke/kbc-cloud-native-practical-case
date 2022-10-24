@@ -1,4 +1,4 @@
-# Lab 05 - Persistence Capability
+# Lab 04 - Persistence Capability
 For implementing our Shopping List functionality we will need some kind of persistence. In this lab we're first going to
 add the technical capability of talking to a database from our Spring Boot app.
 
@@ -108,7 +108,7 @@ Example:
 
 To interact with our database it's convenient to use an SQL client for troubleshooting and interacting with our data.
 For example in Intellij we can easily set up a datasource to connect to our local ``Postgres`` instance:
-![Postgres Data Source](lab-05-data-source.png)
+![Postgres Data Source](lab-04-data-source.png)
 
 **NOTE**: Make sure to first download the appropriate drivers, set up in other SQL clients will be very similar.
 
@@ -168,7 +168,7 @@ many-to-many relationship between cocktails and shopping lists.
 
 Add appropriate Flyway migration scripts to end up with this schema, find out how to best define the foreign key
 relationships in postgres:
-![Postgres DB schema](lab-05-shopping-list-schema.png)
+![Postgres DB schema](lab-04-shopping-list-schema.png)
 
 ## Embedded database
 To keep development options open we also want to enable quick local development by adding the option to start our
@@ -199,10 +199,8 @@ properties will override the ones from the standard ``application.properties`` f
 You can test running the application with this profile: in IntelliJ you can add an extra run configuration by
 duplicating the ``EzGroceriesShoppingListApplication`` one and setting ``hsqldb`` in the active profiles text box:
 
-![Intellij Run configuration](lab-05-Intellij-run-configuration.png)
+![Intellij Run configuration](lab-04-Intellij-run-configuration.png)
 
 ## Commit and tag your work
-Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been
-completed, please tag it with the appropriate lab number:
 
-``git tag -a lab05 -m "lab05"``
+Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

@@ -1,5 +1,4 @@
-# Lab 04: external API
-
+# Lab 03: external API
 It's time to gradually replace our dummy API data with the real thing, we'll start to integrate with the external API's
 provided by ``cocktaildb`` and ``mealdb``:
 
@@ -7,7 +6,6 @@ provided by ``cocktaildb`` and ``mealdb``:
 * https://www.themealdb.com/api.php
 
 ## OpenFeign
-
 There are dozens of frameworks and libraries that we can use to call an external http API. In our case we're going to
 use the [OpenFeign http client](https://github.com/OpenFeign/feign).
 
@@ -18,7 +16,6 @@ We make this choice mainly due to:
 * Support for common integration patterns, e.g: Circuit Breaker
 
 ## Spring Cloud
-
 This is a good moment to introduce [Spring Cloud](https://spring.io/projects/spring-cloud).
 
 Relevant for adding our OpenFeign dependency is the BOM (Bill of Materials) and release train it provides. This assures
@@ -30,7 +27,6 @@ the [release train which matches your Spring Boot version](https://spring.io/pro
 your ``pom.xml``:
 
 ```xml
-
 <dependencyManagement>
     <dependencies>
         <dependency>
@@ -48,7 +44,6 @@ Then we add the actual OpenFeign dependency, notice this is a Spring Cloud start
 starters, we don't have to specify the version as it is set in the BOM:
 
 ```xml
-
 <dependency>
     <groupId>org.springframework.cloud</groupId>
     <artifactId>spring-cloud-starter-openfeign</artifactId>
@@ -56,7 +51,6 @@ starters, we don't have to specify the version as it is set in the BOM:
 ```
 
 # Feign CocktailDB client
-
 Defining external API's in Feign is done in a declarative way, now we'll define all the external calls we deem
 necessary.
 
@@ -64,7 +58,6 @@ To enable Spring to detect Feign clients we need to enable this through the ``@E
 main Spring Boot Application class:
 
 ```java
-
 @SpringBootApplication
 @EnableFeignClients
 public class EzGroceriesShoppingListApplication {
@@ -73,7 +66,6 @@ public class EzGroceriesShoppingListApplication {
 ```
 
 ### Search cocktails
-
 Study the response of the search cocktail API:
 
 Request: ``GET https://www.thecocktaildb.com/api/json/v1/1/search.php?s=margarita``
@@ -133,7 +125,6 @@ public class CocktailDBResponse {
 Example Feign client implementation:
 
 ```java
-
 @Component
 @FeignClient(name = "cocktailDBClient", url = "https://www.thecocktaildb.com/api/json/v1/1")
 public interface CocktailDBClient {
@@ -145,7 +136,6 @@ public interface CocktailDBClient {
 ```
 
 ### Integrate in our API
-
 Now we can integrate this search into our API, this means replacing our dummy resources with this search call and
 transforming their responses into our responses.
 
@@ -184,14 +174,10 @@ Response:
 ```
 
 ## Testing
-
 Adapt your existing ``MockMVC`` test to use a mocked ``CocktailDBClient``, configure the mock to return Cocktails that
 cause the same Controller response bodies as the previous dummy resources. This means our previous assertions should
 still pass successfully.
 
 ## Commit and tag your work
 
-Make sure to add, commit and push all your files at least once at the end of every lab. After the lab has been
-completed, please tag it with the appropriate lab number:
-
-``git tag -a lab04 -m "lab04"``
+Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

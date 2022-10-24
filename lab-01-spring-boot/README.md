@@ -35,4 +35,4 @@ A basic ``EzGroceriesShoppingListApplicationTests`` class has been created, it v
 Run it from Intellij and verify it's successful.
 
 ## Commit and tag
-Commit your work using the comment ``lab01`` and tag it with the same name. Don't forget to push to Github.
+Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

@@ -83,7 +83,6 @@ Response body: empty
 Verification: use ``Postman`` to create a new shopping list.
 
 ## Add Cocktail to Shopping List
-
 This API call links a previously created ``Cocktail`` resource to the ``ShoppingList`` resource.
 
 Request: ``POST http://localhost:8080/shopping-lists/{shoppingListId}/cocktails``
@@ -103,7 +102,6 @@ Response body: empty
 **NOTE**: the response headers must contain the ``Location`` header and point to the newly created resource.
 
 ## Get Shopping List
-
 This method will provide the main (currently still very simple) functionality of our API, it will return a distinct set
 of ingredients derived from all the cocktails that have been added to this shopping list.
 
@@ -130,7 +128,6 @@ Response body:
 ```
 
 ## Get all Shopping Lists
-
 Request: ``GET http://localhost:8080/shopping-lists``
 
 Response status: ``200 OK``
@@ -165,7 +162,6 @@ Response body:
 ```
 
 # Testing
-
 Add Spring MockMVC tests for all the API calls we just implemented. At the minimum, assert the following for each of
 them:
 
@@ -174,7 +170,6 @@ them:
 * JSON response body attributes
 
 # API docs
-
 To document and to be able to interactively test our API we're going to add Open API (Swagger) documentation.
 
 Follow the [instructions for Spring Doc](https://springdoc.org/) to set it up. The only thing you need to do is include
@@ -184,8 +179,4 @@ Verification: open the [Swagger home page](http://localhost:8080/swagger-ui/inde
 of Controllers and the API methods you implemented.
 
 # Commit and tag your work
-
-Make sure to add and commit all your files at least once at the end of every lab. After the lab has been completed,
-please tag it with the appropriate lab number:
-
-``git tag -a lab02 -m "lab02"``
+Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

@@ -37,7 +37,7 @@ case. Add the instructor as a collaborator on your fork.
 ## Labs
 Refer to detailed instructions in each subfolder.
 
-Try to get as far as possible, lab 6 can be considered as the minimal target.
+Try to get as far as possible, lab 5 can be considered as the minimal target.
 
 ## Tips
 Use git to your advantage: branch, make frequent commits, push to github etc..
