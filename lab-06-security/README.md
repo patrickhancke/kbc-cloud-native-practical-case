@@ -1,4 +1,4 @@
-# Lab 08 - Security
+# Lab 06 - Security
 
 ## Mutual TLS
 
