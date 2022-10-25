@@ -103,7 +103,7 @@ public interface CocktailDBClient {
                 CocktailDBResponse.DrinkResource drinkResource = new CocktailDBResponse.DrinkResource();
                 drinkResource.setIdDrink(cocktailEntity.getIdDrink());
                 drinkResource.setStrDrink(cocktailEntity.getName());
-                ...ommitted, all atributes need to be mapped
+                //...omitted, all attributes need to be mapped
                 return drinkResource;
             }).collect(Collectors.toList()));
 
