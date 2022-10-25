@@ -149,5 +149,4 @@ Add a new ``ShoppingListServiceTest`` to test our ``ShoppingListService`` method
 without extensive Spring support: simple Mockito mocks will do.
 
 ## Commit and tag your work
-
 Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.
