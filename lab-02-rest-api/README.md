@@ -12,7 +12,8 @@ Other technical decisions that were taken during the design include:
 # Cocktail API
 These are the requirements for the endpoint:
 * HTTP GET ``/cocktails``
-* it must support a query parameter named ``search`` which accepts a ``String`` value. This parameter acts as a filter to restrict the number of returned cocktails
+* it must support a request parameter named ``search`` which accepts a ``String`` value. This parameter acts as a filter
+  to limit the number of returned cocktails
 * it must return the cocktail resource(s) in ``json`` format
 
 Sample request: ``GET http://localhost:8080/cocktails?search=Russian``

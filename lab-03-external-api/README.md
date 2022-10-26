@@ -6,6 +6,7 @@ provided by ``cocktaildb`` and ``mealdb``:
 * https://www.themealdb.com/api.php
 
 ## OpenFeign
+
 There are dozens of frameworks and libraries that we can use to call an external http API. In our case we're going to
 use the [OpenFeign http client](https://github.com/OpenFeign/feign).
 
@@ -13,17 +14,19 @@ We make this choice mainly due to:
 
 * Low verbosity and fast implementation
 * Spring integration through Spring Cloud
-* Support for common integration patterns, e.g: Circuit Breaker
+* Support for common integration patterns, e.g. Circuit Breaker
 
 ## Spring Cloud
+
 This is a good moment to introduce [Spring Cloud](https://spring.io/projects/spring-cloud).
 
-Relevant for adding our OpenFeign dependency is the BOM (Bill of Materials) and release train it provides. This assures
-us that various Spring Cloud projects are managed through one release train and are compatible with our Spring Boot
-version.
+Relevant for adding our OpenFeign dependency is the
+BOM ([Bill of Materials](https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#bill-of-materials-bom-poms))
+and release train it provides. This assures us that various Spring Cloud projects are managed through one release train
+and are compatible with our Spring Boot version.
 
 To add the correct BOM you should pick
-the [release train which matches your Spring Boot version](https://spring.io/projects/spring-cloud) and define this in
+the [release train which matches your Spring Boot version](https://spring.io/projects/spring-cloud) and define it in
 your ``pom.xml``:
 
 ```xml
@@ -41,7 +44,7 @@ your ``pom.xml``:
 ```
 
 Then we add the actual OpenFeign dependency, notice this is a Spring Cloud starter. Similar to the previous Spring Boot
-starters, we don't have to specify the version as it is set in the BOM:
+starters, we don't have to specify the version as it is defined in the BOM:
 
 ```xml
 <dependency>
@@ -93,7 +96,7 @@ Response (excerpt)
     ...
 ```
 
-We need to define the response fields we need in a Java object, for example (excerpt):
+We need to define the response fields we need in a Java class, for example (excerpt):
 
 ```java
 public class CocktailDBResponse {
@@ -136,6 +139,7 @@ public interface CocktailDBClient {
 ```
 
 ### Integrate in our API
+
 Now we can integrate this search into our API, this means replacing our dummy resources with this search call and
 transforming their responses into our responses.
 
@@ -174,7 +178,8 @@ Response:
 ```
 
 ## Testing
-Adapt your existing ``MockMVC`` test to use a mocked ``CocktailDBClient``, configure the mock to return Cocktails that
+
+Adapt your existing ``MockMVC`` test to use a mocked ``CocktailDBClient``, instruct the mock to return Cocktails that
 cause the same Controller response bodies as the previous dummy resources. This means our previous assertions should
 still pass successfully.
 

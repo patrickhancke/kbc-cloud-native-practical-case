@@ -1,7 +1,9 @@
 # Lab 01 - Spring Boot
-In the root folder of this project, create a Spring Boot application module that will later serve our ``ezGroceries`` API. We will start out minimalistic and gradually add dependencies and capabilities.
+In the root folder of this project, create a Spring Boot application module that will later serve our ``ezGroceries``
+API. We will start out minimalistic and gradually add dependencies and capabilities in each lab.
 
-In this introductory lab we want to focus on making sure the application starts successfully and serves the Spring Boot Actuator endpoints.
+In this introductory lab we want to focus on making sure the application starts successfully and serves the Spring Boot
+Actuator endpoints.
 
 ## Create the new project
 From Intellij, choose ``File`` > ``New`` > ``Project...`` and fill the details as shown in the below screenshot:
@@ -26,8 +28,24 @@ Inspect the console output and make sure the below lines are displayed:
 2022-10-11 14:28:45.112  INFO 20572 --- [           main] c.e.s.EzGroceriesShoppingListApplication : Started EzGroceriesShoppingListApplication in 1.561 seconds (JVM running for 2.688)
 ```
 Open your browser and navigate to http://localhost:8080/actuator, it must return the ``JSON`` response:
+
 ```json
-{"_links":{"self":{"href":"http://localhost:8080/actuator","templated":false},"health":{"href":"http://localhost:8080/actuator/health","templated":false},"health-path":{"href":"http://localhost:8080/actuator/health/{*path}","templated":true}}}
+{
+  "_links": {
+    "self": {
+      "href": "http://localhost:8080/actuator",
+      "templated": false
+    },
+    "health": {
+      "href": "http://localhost:8080/actuator/health",
+      "templated": false
+    },
+    "health-path": {
+      "href": "http://localhost:8080/actuator/health/{*path}",
+      "templated": true
+    }
+  }
+}
 ```
 
 ## Testing
