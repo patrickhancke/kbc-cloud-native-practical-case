@@ -15,8 +15,8 @@ public class CocktailEntity {
 }
 ```
 
-**IMPORTANT**: We're going to store the ``CocktailEntity`` ingredients as a delimited String in the ingredients table
-column. To easily accomplish this we can use a custom JPA converter, you can add this one to your project:
+**IMPORTANT**: We're going to store the ``CocktailEntity`` ingredients as a delimited ``String`` in the ingredients
+table column. To easily accomplish this we can use a custom JPA converter, you can add this one to your project:
 
 ```java
 @Converter
@@ -50,11 +50,13 @@ private Set<String> ingredients;
 ```
 
 ## Spring Data JPA Repositories
-Add 2 Spring Data JPA repositories for both entities. We already added this dependency in the persistence lab. Refer to
-the [documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.definition) for a
-refresh on how to define JPA repositories.
+
+Add 2 Spring Data JPA repositories, one for each entity. We already added this dependency in the persistence lab. Refer
+to the [documentation](https://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories.definition) for
+a refresher on how to define JPA repositories.
 
 ### Service tier
+
 There are multiple ways to design the interaction of API calls with database entities. To keep things simple we're going
 to introduce a traditional Service layer.
 
@@ -78,6 +80,7 @@ public class ShoppingListService {
 ```
 
 ## Cocktail API
+
 A very important change to our application involves the on-the-fly persisting of all Cocktails returned from the search,
 we don't want to store all the attributes, we just want to assign a UUID for every unique Cocktail and persist this to
 our database.
@@ -124,29 +127,36 @@ private List<CocktailResource> mergeAndTransform(List<CocktailDBResponse.DrinkRe
 ```
 
 ## Shopping List API
+
 ### Create a new Shopping List
+
 Refactor the ``ShoppingListController`` to have an autowired reference to the ``ShoppingListService`` and invoke the
 appropriate service layer method. Replace the dummy response resources with the actual result of the creation.
 
 ### Add Cocktails to Shopping List
+
 Replace the dummy resources and provide a real persistence implementation. This will include a service layer that will
 take care of linking cocktails with a specific shopping list.
 
 ### Get a Shopping List
+
 Replace the dummy resources and provide a real persistence implementation.
 
 This is also the API where most of our business value is going to happen! Implement the logic to retrieve all the
 Cocktails from the given Shopping List and extract the distinct ingredients to include them in the response body.
 
 ### Get all Shopping Lists
+
 Replace the dummy resources and provide a real persistence implementation.
 
 ## Testing
-Refactor our ``MockMvc`` tests to include a mocked ``ShoppingListService`` bean and add appropriate expectations to the
+
+Refactor your ``MockMvc`` tests to include a mocked ``ShoppingListService`` bean and add appropriate expectations to the
 mocks.
 
 Add a new ``ShoppingListServiceTest`` to test our ``ShoppingListService`` methods. This test runs as a simple unit test
 without extensive Spring support: simple Mockito mocks will do.
 
 ## Commit and tag your work
+
 Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.

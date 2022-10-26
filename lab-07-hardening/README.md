@@ -29,7 +29,7 @@ outgoing CocktailDB API. After all, this is an external API and can be unreliabl
 If the external API is down we want our API calls to fail fast. We'll configure a timeout for these external calls, we
 can provide both a ``connect`` and ``read`` timeout.
 
-Add these to application.properties:
+Add these to ``application.properties``:
 
 ```properties
 # feign config
@@ -40,9 +40,8 @@ feign.client.config.default.logger-level=basic
 logging.level.com.ezgroceries.shoppinglist=DEBUG
 ```
 
-These properties also enable some basic logging for all our external calls. Restart your application and do a search:
-
-http://localhost:8080/cocktails?search=beach
+These properties also enable some basic logging for all our external calls. Restart your application and do a
+search: http://localhost:8080/cocktails?search=beach
 
 You should see some ``feign`` logging, for example:
 
@@ -68,7 +67,7 @@ There we go, our timeout is working. Make sure to set the property back to a rea
 ### Fallbacks
 
 But what if the external APIs are down? What could we do? We can provide fallback values, since we recently refactored
-to persist all relevant attributes we could exclusively use the results in our database to answer search calls!
+to persist all relevant attributes: we could exclusively use the results in our database to answer search calls!
 
 First have a look at
 the [fallback documentation](https://cloud.spring.io/spring-cloud-netflix/multi/multi_spring-cloud-feign.html#spring-cloud-feign-hystrix-fallback)
@@ -113,7 +112,7 @@ public interface CocktailDBClient {
 }
 ``` 
 
-So this basically means, any time the external call fails, we'll replace the call's expected response with one we create
+So this basically means: any time the external call fails, we'll replace the call's expected response with one we create
 ourselves, populated from a search on our database.
 
 ## Commit and tag your work

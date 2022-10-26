@@ -1,17 +1,20 @@
 # Lab 04 - Persistence Capability
-For implementing our Shopping List functionality we will need some kind of persistence. In this lab we're first going to
-add the technical capability of talking to a database from our Spring Boot app.
+For implementing our Shopping List functionality we need some kind of persistence. In this lab we're first going to add
+the technical capability of talking to a database from our Spring Boot app.
 
-We'll choose ``Postgres`` as a common database solution.
+We choose ``Postgres`` as a common database solution.
 
 ## Run Postgres locally
 
 **Question**: is this possible / allowed on a KBC Macbook?
 
 When developing locally we'll run ``Postgres`` through a docker container, this can be easily done by running the below
-command. The first time we run this, the ``postgres`` docker image will be downloaded:
+command:
 
 ``docker run -e POSTGRES_PASSWORD=mysecretpassword -p 5432:5432 -d postgres``
+
+**NOTE**: the first time we run this command, the ``postgres`` docker image will be downloaded, this might take some
+time.
 
 Example successful output:
 
@@ -26,7 +29,7 @@ Status: Downloaded newer image for postgres:latest
 6d646f5860aa796e2decbce4ffb51b91faf196fb1b2df92db21e27c947d3b33e
 ```
 
-For more information about the usage of this Docker image see: https://hub.docker.com/_/postgres
+For more information about the usage of this Docker image see https://hub.docker.com/_/postgres
 
 ## Connect our Spring Boot application
 
@@ -113,6 +116,7 @@ For example in Intellij we can easily set up a datasource to connect to our loca
 **NOTE**: Make sure to first download the appropriate drivers, set up in other SQL clients will be very similar.
 
 ## Flyway
+
 Version controlling a database schema is always a challenge. In our application we want to tightly control and evolve
 our database schema alongside our code.
 
@@ -123,6 +127,7 @@ the [Spring Boot integration](https://flywaydb.org/documentation/usage/plugins/s
 Let's start by adding Flyway to our project, we need to add this dependency:
 
 ```xml
+
 <dependency>
     <groupId>org.flywaydb</groupId>
     <artifactId>flyway-core</artifactId>
@@ -134,6 +139,7 @@ various [configuration options](https://docs.spring.io/spring-boot/docs/current/
 .
 
 ## Shopping List Schema
+
 Let's define our Shopping List schema using flyway migration scripts, the first script is provided:
 
 Location: ``src/main/resources/db/migration/V0.1__Add_Shopping_List_Table.sql``
@@ -163,7 +169,7 @@ Start your ``ShoppingListApplication``, take a look at the logging, you'll see F
 After successful start-up, use your SQL Client to have a look at the ``flyway_schema_history`` table. Make sure you
 understand its role, have a look at the Flyway documentation if necessary.
 
-To implement our Shopping List functionality in the next lab, we'll first need the entire schema. This just involves a
+To implement our Shopping List functionality in the next lab, we first need the entire schema. This just involves a
 many-to-many relationship between cocktails and shopping lists.
 
 Add appropriate Flyway migration scripts to end up with this schema, find out how to best define the foreign key
@@ -171,6 +177,7 @@ relationships in postgres:
 ![Postgres DB schema](lab-04-shopping-list-schema.png)
 
 ## Embedded database
+
 To keep development options open we also want to enable quick local development by adding the option to start our
 application using an embedded in-memory database.
 
@@ -183,8 +190,7 @@ In this case, we'll use ``HSQLDB``, add this dependency:
 </dependency>
 ```
 
-To be able to easily switch we'll use Spring's Profile support. Alongside the ``application.properties`` provide a new
-file
+To be able to easily switch we use Spring's Profile support. Alongside the ``application.properties`` provide a new file
 called ``application-hsqldb.properties`` with content:
 
 ```properties
@@ -193,8 +199,7 @@ spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.H2Dialect
 ```
 
 This is a convenient Spring profile naming convention: if we start our application and set ``hsqldb`` as the active
-profile, these
-properties will override the ones from the standard ``application.properties`` file.
+profile, these properties will override the ones from the standard ``application.properties`` file.
 
 You can test running the application with this profile: in IntelliJ you can add an extra run configuration by
 duplicating the ``EzGroceriesShoppingListApplication`` one and setting ``hsqldb`` in the active profiles text box:

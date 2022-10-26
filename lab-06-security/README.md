@@ -12,7 +12,7 @@ without the client certificate will not be allowed to make any API calls!
 We'll use Spring Boot and more specifically Tomcat's support to accomplish this.
 
 First of all, for your convenience, a keystore and truststore have been provided to test this locally. Refer
-to [this article](https://en.wikipedia.org/wiki/Java_KeyStore) for more info.
+to [this article](https://en.wikipedia.org/wiki/Java_KeyStore) for background info.
 
 Copy the entire ``keystore`` folder to your application's ``src/main/resources`` folder.
 
@@ -52,7 +52,7 @@ server.ssl.trust-store-password=hunter2
 server.ssl.client-auth=need
 ```
 
-Restart your application and again to reach the actuator endpoint https://localhost:8443/actuator
+Restart your application again to reach the actuator endpoint https://localhost:8443/actuator
 
 It should fail! Depending on the browser you'll get a message indicating no trusted secure connection can be
 established, example from Chrome:
