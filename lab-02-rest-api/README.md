@@ -58,7 +58,7 @@ Guidelines for getting started:
 * hard-code the 2 cocktail resources from the above sample and return them from the method you just declared
 * add logging to your method by declaring an ``org.slf4j.Logger`` in your controller:
 ```java
-private static final Logger log = LoggerFactory.getLogger(MyController.class);
+//private static final Logger log = LoggerFactory.getLogger(MyController.class);
 ```
 or use [Project Lombok](https://projectlombok.org/) if you prefer.
 
