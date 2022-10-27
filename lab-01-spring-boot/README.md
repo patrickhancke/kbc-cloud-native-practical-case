@@ -58,4 +58,4 @@ Run it from Intellij and verify it's successful.
 
 ## Commit and tag
 
-Commit your work: use the lab name as comment and tag it with the same name. Don't forget to push to Github.
+Commit your work: use the lab name as comment and [tag](https://www.jetbrains.com/help/idea/use-tags-to-mark-specific-commits.html) it with the same name. Don't forget to push to Github.
