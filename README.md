@@ -28,7 +28,7 @@ They plan to combine these two APIs in one of their own. They have a brand new C
 
 ## GitHub
 
-Create a free private [github account](https://github.com/) and fork this repository to start implementing the practical case. Add the instructor as a collaborator on your fork.
+Create a free private [github account](https://github.com/) and setup [connection over SSH](https://docs.github.com/en/authentication/connecting-to-github-with-ssh). [Fork this repository](https://docs.github.com/en/get-started/quickstart/fork-a-repo) to start implementing the practical case. Add the instructor as a [collaborator](https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/adding-outside-collaborators-to-repositories-in-your-organization) on your fork.
 
 ## Labs
 
