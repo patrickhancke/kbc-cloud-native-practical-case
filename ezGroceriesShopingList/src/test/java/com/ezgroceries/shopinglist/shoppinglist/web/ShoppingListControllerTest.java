@@ -11,6 +11,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ezgroceries.shopinglist.NotFoundException;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -37,11 +40,19 @@ public class ShoppingListControllerTest {
     @MockBean
     private ShoppingListsService shoppingListsService;
 
+    @MockBean
+    private CocktailDBClient cocktailDBClient;
+
     @BeforeEach
     void setUp() {
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setShoppingListId(SHOPPING_LIST_ID);
         shoppingList.setName(LIST_NAME);
+
+        CocktailDBResponse cocktailDBResponse = new CocktailDBResponse();
+        DrinkResource drink = new DrinkResource();
+        cocktailDBResponse.getDrinks().add(drink);
+        given(cocktailDBClient.searchCocktails(any())).willReturn(cocktailDBResponse);
         given(shoppingListsService.getShoppingList(UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71"))).willReturn(shoppingList);
         given(shoppingListsService.getShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"))).willThrow(NotFoundException.class);
         given(shoppingListsService.createShoppingList(any(String.class))).willReturn(shoppingList);

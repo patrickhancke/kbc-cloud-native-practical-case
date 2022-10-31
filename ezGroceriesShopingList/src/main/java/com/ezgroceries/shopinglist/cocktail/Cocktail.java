@@ -2,6 +2,7 @@ package com.ezgroceries.shopinglist.cocktail;
 
 import java.io.Serializable;
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.UUID;
 
@@ -12,7 +13,7 @@ public class Cocktail implements Serializable {
     private String glass;
     private String instructions;
     private URI image;
-    private Collection<String> ingredients;
+    private Collection<String> ingredients = new ArrayList<>();
 
     public UUID getCocktailId() {
         return cocktailId;
