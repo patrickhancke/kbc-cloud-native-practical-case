@@ -1,0 +1,7 @@
+create table COCKTAIL
+(
+    ID   UUID PRIMARY KEY,
+    ID_DRUNK TEXT,
+    NAME TEXT,
+    INGREDIENTS TEXT
+);
