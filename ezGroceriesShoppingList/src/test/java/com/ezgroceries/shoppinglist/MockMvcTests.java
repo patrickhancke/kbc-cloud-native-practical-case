@@ -1,6 +1,8 @@
 package com.ezgroceries.shoppinglist;
 
+import com.ezgroceries.shoppinglist.Classes.CocktailDBResponse;
 import com.ezgroceries.shoppinglist.Classes.ShoppingList;
+import com.ezgroceries.shoppinglist.Controllers.CocktailDBClient;
 import com.ezgroceries.shoppinglist.Controllers.ShoppingListController;
 import com.ezgroceries.shoppinglist.Managers.CocktailManager;
 import com.ezgroceries.shoppinglist.Managers.ShoppingListManager;
@@ -40,6 +42,9 @@ public class MockMvcTests {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private CocktailDBClient cocktailDBClient;
+
 @MockBean
 private ShoppingListManager shoppingListManager;
 
@@ -48,7 +53,7 @@ private ShoppingListManager shoppingListManager;
         int expectedNumberOfAccounts = 2;
 
        this.mockMvc //
-                .perform(get("/cocktails") //
+                .perform(get("/cocktails?search=Russian") //
                         .accept(MediaType.parseMediaType("application/json"))) //
                 .andExpect(status().isOk()) //
                 .andExpect(content().contentType("application/json"))
@@ -81,5 +86,12 @@ private ShoppingListManager shoppingListManager;
         mockMvc.perform(post("/shopping-lists/{shoppingListId}/cocktails", 1).content("Test"))
                 .andExpect(status().isCreated());
     }
+
+    @Test
+    public void searchCocktails(){
+        CocktailDBResponse test = cocktailDBClient.searchCocktails("Russian");
+        System.out.println(test);
+    }
+
 
 }

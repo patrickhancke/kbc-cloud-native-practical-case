@@ -13,7 +13,7 @@ import java.util.List;
 public class ShoppingListController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private static ShoppingListManager shoppingListManager = new ShoppingListManager();
+    private final ShoppingListManager shoppingListManager;
 
     @Autowired
     public ShoppingListController(ShoppingListManager shoppingListManager) {this.shoppingListManager = shoppingListManager;

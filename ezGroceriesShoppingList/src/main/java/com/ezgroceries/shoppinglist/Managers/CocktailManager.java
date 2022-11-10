@@ -1,8 +1,11 @@
 package com.ezgroceries.shoppinglist.Managers;
 
 import com.ezgroceries.shoppinglist.Classes.Cocktail;
+import com.ezgroceries.shoppinglist.Classes.CocktailDBResponse;
+import com.ezgroceries.shoppinglist.Controllers.CocktailDBClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,6 +14,9 @@ import java.util.List;
 
 @Repository
 public class CocktailManager {
+
+    @Autowired
+    private CocktailDBClient cocktailDBClient;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -24,15 +30,40 @@ public class CocktailManager {
                 "Cocktail glass","Rub rim of cocktail glass with lime juice. Dip rim in coarse salt..",
                 "https://www.thecocktaildb.com/images/media/drink/qtvvyq1439905913.jpg", Arrays.asList("Tequila","Blue Curacao","Lime juice","Salt")));
         return result;
+
     }
 
     public List<Cocktail> getCocktails(String Cocktail){
 
-        logger.info("GetCocktails");
-        logger.info(Cocktail);
-
         List<Cocktail> result = new ArrayList<>();
+        logger.info("GetCocktails");
 
+        CocktailDBResponse Cocktails = cocktailDBClient.searchCocktails(Cocktail);
+        List <CocktailDBResponse.DrinkResource> test = Cocktails.getDrinks();
+
+        int i = 0;
+
+        for (CocktailDBResponse.DrinkResource a : test) {
+            i++;
+            logger.info("for " + i + ": " + String.valueOf(a));
+            result.add(new Cocktail(a.getIdDrink(),a.getStrDrink(),
+                    a.getStrGlass(),a.getStrInstructions(),
+                    a.getStrDrinkThumb(), Arrays.asList(a.getStrIngredient1(),a.getStrIngredient2(),a.getStrIngredient3())));
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
         if (Cocktail.equals("Russian")){
 
             result.add(new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4","Margerita",
@@ -53,7 +84,7 @@ public class CocktailManager {
                     "Cocktail glass","Rub rim of cocktail glass with lime juice. Dip rim in coarse salt..",
                     "https://www.thecocktaildb.com/images/media/drink/qtvvyq1439905913.jpg", Arrays.asList("Tequila","Blue Curacao","Lime juice","Salt")));
 
-        }
+        }*/
 
         return result;
     }
