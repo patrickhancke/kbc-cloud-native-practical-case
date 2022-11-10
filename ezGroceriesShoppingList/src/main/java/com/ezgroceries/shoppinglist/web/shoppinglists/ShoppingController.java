@@ -1,12 +1,16 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
+import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class ShoppingController {
@@ -22,7 +26,7 @@ public class ShoppingController {
         log.info("Getting shopping list " + listId);
         ShoppingList found = shoppingListManager.getShoppingList(listId);
         return ResponseEntity.ok().body(found);
-    }
+    } //TODO now always returning OK, also set 'not found' logic
 
     @GetMapping(value="/shopping-lists")
     public ResponseEntity<List<ShoppingList>> getAllShoppingLists(){
@@ -31,20 +35,32 @@ public class ShoppingController {
         return ResponseEntity.ok().body(results);
     }
 
-    @PostMapping(value = "/shopping-lists")
-    public ResponseEntity<Void> createShoppingList(@RequestParam String name) { // (name="name") default
+    @PostMapping(value = "/shopping-lists", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity createShoppingList(@RequestBody ShoppingList shoppingList) {
+
+        String name = shoppingList.getName();
         log.info("create shopping list for " + name);
-        shoppingListManager.createShoppingList(name);
-        URI location = null; //TODO to determine location
+        String listId = shoppingListManager.createShoppingList(name);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{resourceId}")
+                .buildAndExpand(listId)
+                .toUri();
         return ResponseEntity.created(location).build();
     }
 
 
+
     @PostMapping(value = "/shopping-lists/{shoppingListId}/cocktails")
-    public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") String listId, @RequestParam String cocktailId) {
-        log.info("Add cocktail " + cocktailId + " to shopping list " + listId);
-        shoppingListManager.addCocktailToShoppingList(listId, cocktailId);
-        URI location = null; //TODO to determine location
+    public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") String listId, @RequestBody Cocktail cocktail) {
+
+        log.info("Add cocktail " + cocktail.getCocktailId() + " to shopping list " + listId);
+        shoppingListManager.addCocktailToShoppingList(listId, cocktail);
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequestUri()
+                .path("/{resourceId}")
+                .buildAndExpand(cocktail.getCocktailId())
+                .toUri(); //TODO location of the resource = location of the cocktail?
         return ResponseEntity.created(location).build();
     }
 }

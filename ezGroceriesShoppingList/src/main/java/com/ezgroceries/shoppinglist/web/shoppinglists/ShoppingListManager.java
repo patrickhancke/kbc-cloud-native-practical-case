@@ -1,5 +1,7 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
+import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
+
 import java.util.List;
 
 public interface ShoppingListManager {
@@ -8,7 +10,7 @@ public interface ShoppingListManager {
 
     ShoppingList getShoppingList(String id);
 
-    void createShoppingList(String name);
+    String createShoppingList(String name);
 
-    void addCocktailToShoppingList(String listId, String cocktailId);
+    void addCocktailToShoppingList(String listId, Cocktail cocktail);
 }

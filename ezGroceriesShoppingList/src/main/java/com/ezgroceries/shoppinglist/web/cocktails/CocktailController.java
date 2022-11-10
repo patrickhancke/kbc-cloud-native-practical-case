@@ -27,6 +27,5 @@ public class CocktailController {
 
         List<Cocktail> result = cocktailManager.searchCocktail(search);
         return ResponseEntity.ok().body(result);
-        //return result;
     }
 }

@@ -1,5 +1,6 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
+import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,6 +18,7 @@ public class StubShoppingListManager implements ShoppingListManager{
             "My birthday",
             new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
 
+    private final String dummyListId = "testId";
 
     @Override
     public List<ShoppingList> getAllShoppingLists() {
@@ -33,12 +35,13 @@ public class StubShoppingListManager implements ShoppingListManager{
     }
 
     @Override
-    public void createShoppingList(String name) {
+    public String createShoppingList(String name) {
         log.info("doing nothing really..");
+        return dummyListId;
     }
 
     @Override
-    public void addCocktailToShoppingList(String listId, String cocktailId) {
+    public void addCocktailToShoppingList(String listId, Cocktail cocktail) {
         log.info("doing nothing really..");
     }
 }
