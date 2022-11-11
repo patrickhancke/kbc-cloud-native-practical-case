@@ -10,7 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ezgroceries.shopinglist.NotFoundException;
+import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
@@ -26,9 +26,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
+@ActiveProfiles("hsqldb")
 public class ShoppingListControllerTest {
 
     private static final UUID SHOPPING_LIST_ID = UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71");
@@ -54,7 +56,7 @@ public class ShoppingListControllerTest {
         cocktailDBResponse.getDrinks().add(drink);
         given(cocktailDBClient.searchCocktails(any())).willReturn(cocktailDBResponse);
         given(shoppingListsService.getShoppingList(UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71"))).willReturn(shoppingList);
-        given(shoppingListsService.getShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"))).willThrow(NotFoundException.class);
+        given(shoppingListsService.getShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"))).willThrow(ezGroceriesNotFoundException.class);
         given(shoppingListsService.createShoppingList(any(String.class))).willReturn(shoppingList);
     }
 

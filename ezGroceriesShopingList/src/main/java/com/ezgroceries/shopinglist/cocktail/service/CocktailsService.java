@@ -1,15 +1,13 @@
 package com.ezgroceries.shopinglist.cocktail.service;
 
-import com.ezgroceries.shopinglist.NotFoundException;
+import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 import org.springframework.stereotype.Controller;
 
@@ -56,7 +54,7 @@ public class CocktailsService {
         Cocktail cocktail = cocktails.get(cocktailId);
         if (cocktail == null)
         {
-            throw new NotFoundException("cocktail with id: " + cocktailId + " not found");
+            throw new ezGroceriesNotFoundException("cocktail with id: " + cocktailId + " not found");
         }
 
         return cocktail;

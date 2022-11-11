@@ -1,6 +1,6 @@
 package com.ezgroceries.shopinglist.shoppinglist.service;
 
-import com.ezgroceries.shopinglist.NotFoundException;
+import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,7 +15,7 @@ public class ShoppingListsService {
     public ShoppingList getShoppingList(UUID id) {
         ShoppingList shoppingList = shoppingLists.get(id);
         if (shoppingList == null) {
-            throw new NotFoundException("shopping list with id: " + id + " not found");
+            throw new ezGroceriesNotFoundException("shopping list with id: " + id + " not found");
         }
 
         return shoppingList;

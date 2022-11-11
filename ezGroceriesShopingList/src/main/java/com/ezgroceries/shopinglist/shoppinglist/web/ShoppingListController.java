@@ -2,12 +2,21 @@ package com.ezgroceries.shopinglist.shoppinglist.web;
 
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailsService;
-import com.ezgroceries.shopinglist.NotFoundException;
+import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.net.URI;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -36,8 +45,17 @@ public class ShoppingListController {
         this.cocktailsService = cocktailsService;
     }
 
-    @GetMapping("/shopping-lists/{shoppingListId}")
+    @Operation(summary = "get the requested shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "shopping list found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ShoppingList.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "bad request invalid parameter/s", content = @Content),
+            @ApiResponse(responseCode = "404", description = "resource not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content),
+    })
     @ResponseBody
+    @GetMapping("/shopping-lists/{shoppingListId}")
     public ShoppingList getShoppingList(@PathVariable(name = "shoppingListId") UUID shoppingListId) {
         ShoppingList shoppingList = shoppingListsService.getShoppingList(shoppingListId);
         shoppingList.setIngredients(shoppingList.getCocktails().stream()
@@ -46,15 +64,51 @@ public class ShoppingListController {
         return shoppingList;
     }
 
+    @Operation(summary = "create a shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201",
+                    description = "shopping list created",
+                    content = {@Content(mediaType = "application/json", schema = @Schema)},
+                    headers = @Header(name = "Location",
+                            description = "the location of the newly created resource",
+                            schema = @Schema(type = "url"))),
+            @ApiResponse(responseCode = "400", description = "bad request invalid parameter/s", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content),
+    })
     @PostMapping("/shopping-lists")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<Void> create(@RequestBody String name) {
+    public ResponseEntity<Void> create(
+            @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                    description = "shopping list name",
+                    content = @Content(mediaType = "application/json"),
+                    required = true)
+            @RequestBody
+            @Valid
+            @Size(max = 100, message = "maximum param length reached")
+                    String name) {
         ShoppingList shoppingList = shoppingListsService.createShoppingList(name);
         return entityWithLocation(shoppingList.getShoppingListId());
     }
 
+    @Operation(summary = "add cocktails to a shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "shopping list found", content = {
+                    @Content(mediaType = "application/json", schema = @Schema)
+            }, headers = @Header(name = "Location",
+                    description = "the exact location of this newly created resource",
+                    schema = @Schema(type = "url"))),
+            @ApiResponse(responseCode = "400", description = "bad request invalid parameter/s", content = @Content),
+            @ApiResponse(responseCode = "404", description = "resource not found", content = @Content),
+            @ApiResponse(responseCode = "500", description = "internal server error", content = @Content),
+    })
     @PostMapping("/shopping-lists/{shoppingListId}/cocktails")
-    public ResponseEntity<Void> addCocktail(@PathVariable UUID shoppingListId, @RequestParam UUID cocktailId) {
+    public ResponseEntity<Void> addCocktail(
+            @Parameter(description = "shopping list uudi ", required = true)
+            @PathVariable UUID shoppingListId,
+            @Valid
+            @Size(max = 100, message = "parameter max size exceeded")
+            @Parameter(description = "cocktail uuid", required = true)
+            @RequestParam UUID cocktailId) {
         ShoppingList shoppingList = shoppingListsService.getShoppingList(shoppingListId);
         Cocktail cocktail = cocktailsService.getCocktail(cocktailId);
         shoppingList.getCocktails().add(cocktail);
@@ -62,7 +116,7 @@ public class ShoppingListController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({ NotFoundException.class })
+    @ExceptionHandler({ ezGroceriesNotFoundException.class })
     public void handleDataIntegrity(Exception ex) {
         LOGGER.error(ex.getMessage());
         // just return empty 404
