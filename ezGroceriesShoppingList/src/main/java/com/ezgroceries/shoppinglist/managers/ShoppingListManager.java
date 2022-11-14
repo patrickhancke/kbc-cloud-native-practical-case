@@ -1,7 +1,6 @@
-package com.ezgroceries.shoppinglist.Managers;
+package com.ezgroceries.shoppinglist.managers;
 
-import com.ezgroceries.shoppinglist.Classes.Cocktail;
-import com.ezgroceries.shoppinglist.Classes.ShoppingList;
+import com.ezgroceries.shoppinglist.classes.ShoppingList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;

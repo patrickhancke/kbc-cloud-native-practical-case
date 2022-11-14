@@ -1,8 +1,8 @@
-package com.ezgroceries.shoppinglist.Managers;
+package com.ezgroceries.shoppinglist.managers;
 
-import com.ezgroceries.shoppinglist.Classes.Cocktail;
-import com.ezgroceries.shoppinglist.Classes.CocktailDBResponse;
-import com.ezgroceries.shoppinglist.Controllers.CocktailDBClient;
+import com.ezgroceries.shoppinglist.classes.Cocktail;
+import com.ezgroceries.shoppinglist.classes.CocktailDBResponse;
+import com.ezgroceries.shoppinglist.controllers.CocktailDBClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,13 +39,13 @@ public class CocktailManager {
         logger.info("GetCocktails");
 
         CocktailDBResponse Cocktails = cocktailDBClient.searchCocktails(Cocktail);
-        List <CocktailDBResponse.DrinkResource> test = Cocktails.getDrinks();
+        List <CocktailDBResponse.DrinkResource> cocktailList = Cocktails.getDrinks();
 
         int i = 0;
 
-        for (CocktailDBResponse.DrinkResource a : test) {
+        for (CocktailDBResponse.DrinkResource a : cocktailList) {
             i++;
-            logger.info("for " + i + ": " + String.valueOf(a));
+           // logger.info("for " + i + ": " + String.valueOf(a));
             result.add(new Cocktail(a.getIdDrink(),a.getStrDrink(),
                     a.getStrGlass(),a.getStrInstructions(),
                     a.getStrDrinkThumb(), Arrays.asList(a.getStrIngredient1(),a.getStrIngredient2(),a.getStrIngredient3())));

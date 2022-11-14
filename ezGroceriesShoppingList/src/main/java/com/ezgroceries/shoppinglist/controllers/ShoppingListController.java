@@ -1,7 +1,7 @@
-package com.ezgroceries.shoppinglist.Controllers;
+package com.ezgroceries.shoppinglist.controllers;
 
-import com.ezgroceries.shoppinglist.Classes.ShoppingList;
-import com.ezgroceries.shoppinglist.Managers.ShoppingListManager;
+import com.ezgroceries.shoppinglist.classes.ShoppingList;
+import com.ezgroceries.shoppinglist.managers.ShoppingListManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

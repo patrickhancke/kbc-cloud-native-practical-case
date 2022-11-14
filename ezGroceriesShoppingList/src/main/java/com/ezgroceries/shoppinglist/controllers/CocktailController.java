@@ -1,11 +1,11 @@
-package com.ezgroceries.shoppinglist.Controllers;
+package com.ezgroceries.shoppinglist.controllers;
 
-import com.ezgroceries.shoppinglist.Classes.Cocktail;
+import com.ezgroceries.shoppinglist.classes.Cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.ezgroceries.shoppinglist.Managers.CocktailManager;
+import com.ezgroceries.shoppinglist.managers.CocktailManager;
 import java.util.List;
 
 @RestController

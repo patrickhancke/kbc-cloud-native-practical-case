@@ -1,4 +1,4 @@
-package com.ezgroceries.shoppinglist.Classes;
+package com.ezgroceries.shoppinglist.classes;
 import java.util.List;
 
 public class Cocktail {

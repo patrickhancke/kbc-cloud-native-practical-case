@@ -1,13 +1,7 @@
-package com.ezgroceries.shoppinglist.Classes;
+package com.ezgroceries.shoppinglist.classes;
 
-import com.ezgroceries.shoppinglist.Controllers.CocktailDBClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Repository;
 
 import java.util.List;
 

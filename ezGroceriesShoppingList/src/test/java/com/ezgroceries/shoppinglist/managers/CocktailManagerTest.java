@@ -1,8 +1,6 @@
-package com.ezgroceries.shoppinglist.Managers;
+package com.ezgroceries.shoppinglist.managers;
 
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class CocktailManagerTest {
 
