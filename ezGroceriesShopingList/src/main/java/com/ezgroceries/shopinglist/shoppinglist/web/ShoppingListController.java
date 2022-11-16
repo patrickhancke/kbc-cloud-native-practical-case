@@ -1,8 +1,6 @@
 package com.ezgroceries.shopinglist.shoppinglist.web;
 
-import com.ezgroceries.shopinglist.cocktail.Cocktail;
-import com.ezgroceries.shopinglist.cocktail.service.CocktailsService;
-import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
+import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,12 +35,9 @@ public class ShoppingListController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingListController.class);
 
     private final ShoppingListsService shoppingListsService;
-    private final CocktailsService cocktailsService;
 
-    public ShoppingListController(ShoppingListsService shoppingListsService,
-            CocktailsService cocktailsService) {
+    public ShoppingListController(ShoppingListsService shoppingListsService) {
         this.shoppingListsService = shoppingListsService;
-        this.cocktailsService = cocktailsService;
     }
 
     @Operation(summary = "get the requested shopping list")
@@ -83,10 +78,8 @@ public class ShoppingListController {
                     content = @Content(mediaType = "application/json"),
                     required = true)
             @RequestBody
-            @Valid
-            @Size(max = 100, message = "maximum param length reached")
-                    String name) {
-        ShoppingList shoppingList = shoppingListsService.createShoppingList(name);
+            @Valid ShoppingList requestShoppingList) {
+        ShoppingList shoppingList = shoppingListsService.createShoppingList(requestShoppingList.getName());
         return entityWithLocation(shoppingList.getShoppingListId());
     }
 
@@ -109,14 +102,12 @@ public class ShoppingListController {
             @Size(max = 100, message = "parameter max size exceeded")
             @Parameter(description = "cocktail uuid", required = true)
             @RequestParam UUID cocktailId) {
-        ShoppingList shoppingList = shoppingListsService.getShoppingList(shoppingListId);
-        Cocktail cocktail = cocktailsService.getCocktail(cocktailId);
-        shoppingList.getCocktails().add(cocktail);
+        shoppingListsService.update(shoppingListId, cocktailId);
         return entityWithLocation(cocktailId);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler({ ezGroceriesNotFoundException.class })
+    @ExceptionHandler({ EzGroceriesNotFoundException.class })
     public void handleDataIntegrity(Exception ex) {
         LOGGER.error(ex.getMessage());
         // just return empty 404

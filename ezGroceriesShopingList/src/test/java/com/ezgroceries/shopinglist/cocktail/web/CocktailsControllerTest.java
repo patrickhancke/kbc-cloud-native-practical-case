@@ -1,6 +1,7 @@
 package com.ezgroceries.shopinglist.cocktail.web;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -11,9 +12,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
+import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,11 +40,18 @@ public class CocktailsControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
+    private ShoppingListsService shoppingListsService;
+
+    @MockBean
     private CocktailDBClient cocktailDBClient;
 
+    @MockBean
+    private CocktailRepository cocktailRepository;
+
     @BeforeEach
-    private void setUp() {
+    public void setUp() {
         given(cocktailDBClient.searchCocktails(any())).willReturn(getCocktails());
+        given(cocktailRepository.saveAll(any())).willReturn(getCreatedEntities());
     }
 
     @Test
@@ -52,16 +68,15 @@ public class CocktailsControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.length()", equalTo(2)))
-                .andExpect(jsonPath("$.[1].name", equalTo("Margerita")))
-                .andExpect(jsonPath("$.[1].glass", equalTo("Cocktail glass")))
-                .andExpect(jsonPath("$.[1].image", equalTo("https://www.thecocktaildb.com/images/media/drink/wpxpvu1439905379.jpg")))
-                .andExpect(jsonPath("$.[0].name", equalTo("Blue Margerita")));
+                .andExpect(jsonPath("$.[0].name", equalTo("Margerita")))
+                .andExpect(jsonPath("$.[0].ingredients", hasItem("Lime juice")))
+                .andExpect(jsonPath("$.[1].name", equalTo("Blue Margerita")));
     }
 
     private CocktailDBResponse getCocktails() {
         Map<String, DrinkResource> cocktails = new HashMap<>();
         DrinkResource cocktail = new DrinkResource();
-        cocktail.setIdDrink("23b3d85a-3928-41c0-a533-6538a71e17c4");
+        cocktail.setIdDrink("1234");
         cocktail.setStrDrink("Margerita");
         cocktail.setStrGlass("Cocktail glass");
         cocktail.setStrInstructions("Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten..");
@@ -73,7 +88,7 @@ public class CocktailsControllerTest {
         cocktails.put(cocktail.getIdDrink(), cocktail);
 
         cocktail = new DrinkResource();
-        cocktail.setIdDrink("d615ec78-fe93-467b-8d26-5d26d8eab073");
+        cocktail.setIdDrink("5678");
         cocktail.setStrDrink("Blue Margerita");
         cocktail.setStrGlass("Cocktail glass");
         cocktail.setStrInstructions("Rub rim of cocktail glass with lime juice. Dip rim in coarse salt..");
@@ -87,6 +102,23 @@ public class CocktailsControllerTest {
         CocktailDBResponse response = new CocktailDBResponse();
         response.setDrinks(new ArrayList<>(cocktails.values()));
         return response;
+    }
+
+    private Collection<CocktailEntity> getCreatedEntities() {
+        return getCocktails().getDrinks().stream().map(this::create).collect(Collectors.toList());
+    }
+
+    private CocktailEntity create (DrinkResource resource) {
+        CocktailEntity cocktailEntity = new CocktailEntity();
+
+        cocktailEntity.setId(UUID.randomUUID());
+        cocktailEntity.setIdDrunk(resource.getIdDrink());
+        cocktailEntity.setIngredients(Stream.of(resource.getStrIngredient1(), resource.getStrIngredient2(), resource.getStrIngredient3())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
+        cocktailEntity.setName(resource.getStrDrink());
+
+        return cocktailEntity;
     }
 
 }

@@ -10,15 +10,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
+import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,9 @@ public class ShoppingListControllerTest {
     private ShoppingListsService shoppingListsService;
 
     @MockBean
+    private CocktailRepository cocktailRepository;
+
+    @MockBean
     private CocktailDBClient cocktailDBClient;
 
     @BeforeEach
@@ -51,13 +55,17 @@ public class ShoppingListControllerTest {
         shoppingList.setShoppingListId(SHOPPING_LIST_ID);
         shoppingList.setName(LIST_NAME);
 
+        CocktailEntity cocktailEntity = new CocktailEntity();
+        cocktailEntity.setId(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"));
+
         CocktailDBResponse cocktailDBResponse = new CocktailDBResponse();
         DrinkResource drink = new DrinkResource();
         cocktailDBResponse.getDrinks().add(drink);
         given(cocktailDBClient.searchCocktails(any())).willReturn(cocktailDBResponse);
         given(shoppingListsService.getShoppingList(UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71"))).willReturn(shoppingList);
-        given(shoppingListsService.getShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"))).willThrow(ezGroceriesNotFoundException.class);
-        given(shoppingListsService.createShoppingList(any(String.class))).willReturn(shoppingList);
+        given(shoppingListsService.update(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"))).willThrow(EzGroceriesNotFoundException.class);
+        given(shoppingListsService.createShoppingList(any())).willReturn(shoppingList);
+        given(cocktailRepository.findById(any())).willReturn(Optional.of(cocktailEntity));
     }
 
     @Test
@@ -71,9 +79,9 @@ public class ShoppingListControllerTest {
 
     @Test
     public void testCreateShoppingList() throws Exception {
-        Map<String, String> param = new HashMap<>();
-        param.put("name", "Stephanie's birthday");
-        mockMvc.perform(post("/shopping-lists").content(asJsonString(param)))
+        ShoppingList shoppingList = new ShoppingList();
+        shoppingList.setName("Stephanie's birthday");
+        mockMvc.perform(post("/shopping-lists").contentType(MediaType.APPLICATION_JSON).content(asJsonString(shoppingList)))
                 .andExpect(status().isCreated())
                 .andExpect(header().exists("Location"))
                 .andExpect(header().string("Location", "http://localhost/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71"));

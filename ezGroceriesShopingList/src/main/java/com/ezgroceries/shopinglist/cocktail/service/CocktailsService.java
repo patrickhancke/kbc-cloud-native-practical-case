@@ -1,67 +1,99 @@
 package com.ezgroceries.shopinglist.cocktail.service;
 
-import com.ezgroceries.shopinglist.exceptionhandling.ezGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
-import java.net.URI;
-import java.net.URISyntaxException;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
+import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class CocktailsService {
-    private static final Map<UUID, Cocktail> cocktails = new HashMap<>();
 
-    static {
-        Cocktail cocktail = new Cocktail();
-        cocktail.setCocktailId(UUID.fromString("23b3d85a-3928-41c0-a533-6538a71e17c4"));
-        cocktail.setName("Margerita");
-        cocktail.setGlass("Cocktail glass");
-        cocktail.setInstructions("Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten..");
-        try {
-            cocktail.setImage(new URI("https://www.thecocktaildb.com/images/media/drink/wpxpvu1439905379.jpg"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        cocktail.setIngredients(List.of("Tequila",
-                "Triple sec",
-                "Lime juice",
-                "Salt"));
-        cocktails.put(cocktail.getCocktailId(), cocktail);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CocktailsService.class);
 
-        cocktail = new Cocktail();
-        cocktail.setCocktailId(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"));
-        cocktail.setName("Blue Margerita");
-        cocktail.setGlass("Cocktail glass");
-        cocktail.setInstructions("Rub rim of cocktail glass with lime juice. Dip rim in coarse salt..");
-        try {
-            cocktail.setImage(new URI("https://www.thecocktaildb.com/images/media/drink/qtvvyq1439905913.jpg"));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
-        cocktail.setIngredients(List.of("Tequila",
-                "Blue Curacao",
-                "Lime juice",
-                "Salt"));
+    private final CocktailRepository cocktailRepository;
+    private final CocktailDBClient client;
 
-        cocktails.put(cocktail.getCocktailId(), cocktail);
+    public CocktailsService(CocktailRepository cocktailRepository, CocktailDBClient client) {
+        this.cocktailRepository = cocktailRepository;
+        this.client = client;
     }
 
-    public Cocktail getCocktail(UUID cocktailId) {
-        Cocktail cocktail = cocktails.get(cocktailId);
-        if (cocktail == null)
+    public CocktailEntity getCocktailEntity(UUID cocktailId) {
+        Optional<CocktailEntity> cocktail = cocktailRepository.findById(cocktailId);
+        if (cocktail.isEmpty())
         {
-            throw new ezGroceriesNotFoundException("cocktail with id: " + cocktailId + " not found");
+            throw new EzGroceriesNotFoundException("cocktail with id: " + cocktailId + " not found");
         }
 
-        return cocktail;
+        return cocktail.get();
     }
 
-    public Collection<Cocktail> getCocktails() {
-        return cocktails.values();
+    public Collection<Cocktail> searchByTerm(String searchTerm) {
+        CocktailDBResponse cocktailDBResponse = client.searchCocktails(searchTerm);
+        if (cocktailDBResponse == null)
+        {
+            return Collections.emptyList();
+        }
+
+        Collection<CocktailEntity> byIdDrunkIn = cocktailRepository.findByIdDrunkIn(
+                cocktailDBResponse.getDrinks().stream().map(DrinkResource::getIdDrink).collect(Collectors.toList()));
+
+        if (Objects.equals(byIdDrunkIn.size(), cocktailDBResponse.getDrinks().size())) {
+            return byIdDrunkIn.stream().map(this::transform).collect(Collectors.toList());
+        }
+
+        Collection<CocktailEntity> cocktailEntities = populateCocktailTable(cocktailDBResponse.getDrinks().stream()
+                .filter(cocktail -> !byIdDrunkIn.stream().map(CocktailEntity::getIdDrunk).collect(Collectors.toList()).contains(cocktail.getIdDrink()))
+                .collect(Collectors.toList()));
+        cocktailEntities.addAll(byIdDrunkIn);
+        return cocktailEntities.stream().map(this::transform).collect(Collectors.toList());
     }
 
+    private Collection<CocktailEntity> populateCocktailTable(Collection<DrinkResource> source) {
+        List<CocktailEntity> entities = source.stream().map(this::createCocktail).collect(Collectors.toList());
+        Iterable<CocktailEntity> cocktailEntities = cocktailRepository.saveAll(entities);
+        LOGGER.debug("cocktail table populated with " + ((Collection<?>)cocktailEntities).size());
+
+        return new ArrayList<>(((Collection<CocktailEntity>) cocktailEntities));
+    }
+
+    private CocktailEntity createCocktail(DrinkResource resource) {
+        CocktailEntity cocktailEntity = new CocktailEntity();
+
+        cocktailEntity.setId(UUID.randomUUID());
+        cocktailEntity.setIdDrunk(resource.getIdDrink());
+        cocktailEntity.setIngredients(Stream.of(resource.getStrIngredient1(), resource.getStrIngredient2(), resource.getStrIngredient3())
+                .filter(Objects::nonNull)
+                .collect(Collectors.toSet()));
+        cocktailEntity.setName(resource.getStrDrink());
+
+        return cocktailEntity;
+    }
+
+    public Cocktail transform(CocktailEntity entity) {
+        Cocktail result = new Cocktail();
+        result.setCocktailId(entity.getId());
+        result.setName(entity.getName());
+
+        if (entity.getIngredients() != null) {
+            result.setIngredients(entity.getIngredients());
+        }
+
+        return result;
+    }
 }

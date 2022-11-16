@@ -1,5 +1,6 @@
 package com.ezgroceries.shopinglist.cocktail;
 
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,5 +12,8 @@ public interface CocktailDBClient {
 
     @GetMapping(value = "search.php")
     CocktailDBResponse searchCocktails(@RequestParam("s") String search);
+
+    @GetMapping(value = "/lookup.php")
+    DrinkResource getById(@RequestParam("i") String id);
 
 }
