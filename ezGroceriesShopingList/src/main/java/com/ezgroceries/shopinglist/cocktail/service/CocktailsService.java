@@ -7,6 +7,8 @@ import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -80,6 +82,9 @@ public class CocktailsService {
         cocktailEntity.setIngredients(Stream.of(resource.getStrIngredient1(), resource.getStrIngredient2(), resource.getStrIngredient3())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet()));
+        cocktailEntity.setGlass(resource.getStrGlass());
+        cocktailEntity.setImage(resource.getStrDrinkThumb());
+        cocktailEntity.setInstructions(resource.getStrInstructions());
         cocktailEntity.setName(resource.getStrDrink());
 
         return cocktailEntity;
@@ -89,6 +94,16 @@ public class CocktailsService {
         Cocktail result = new Cocktail();
         result.setCocktailId(entity.getId());
         result.setName(entity.getName());
+        result.setGlass(entity.getGlass());
+        result.setInstructions(entity.getInstructions());
+
+        if (entity.getImage() != null) {
+            try {
+                result.setImage(new URI(entity.getImage()));
+            } catch (URISyntaxException e) {
+                LOGGER.error(e.getMessage());
+            }
+        }
 
         if (entity.getIngredients() != null) {
             result.setIngredients(entity.getIngredients());

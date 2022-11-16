@@ -30,6 +30,15 @@ public class CocktailEntity {
     @Convert(converter = StringSetConverter.class)
     private Set<String> ingredients;
 
+    @Column(name = "glass")
+    private String glass;
+
+    @Column(name = "instructions")
+    private String instructions;
+
+    @Column(name = "image_link")
+    private String image;
+
     @ManyToMany(mappedBy = "cocktails")
     private Set<ShoppingListEntity> shoppingLists;
 
@@ -85,6 +94,30 @@ public class CocktailEntity {
         }
     }
 
+    public String getGlass() {
+        return glass;
+    }
+
+    public void setGlass(String glass) {
+        this.glass = glass;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -95,12 +128,13 @@ public class CocktailEntity {
         }
         CocktailEntity that = (CocktailEntity) o;
         return Objects.equals(id, that.id) && Objects.equals(idDrunk, that.idDrunk) && Objects.equals(name, that.name)
-                && Objects.equals(ingredients, that.ingredients) && Objects.equals(shoppingLists, that.shoppingLists);
+                && Objects.equals(ingredients, that.ingredients) && Objects.equals(glass, that.glass) && Objects.equals(
+                instructions, that.instructions) && Objects.equals(image, that.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idDrunk, name, ingredients, shoppingLists);
+        return Objects.hash(id, idDrunk, name, ingredients, glass, instructions, image);
     }
 
     @Override
@@ -110,7 +144,9 @@ public class CocktailEntity {
                 ", idDrunk='" + idDrunk + '\'' +
                 ", name='" + name + '\'' +
                 ", ingredients=" + ingredients +
-                ", shoppingLists=" + shoppingLists +
+                ", glass='" + glass + '\'' +
+                ", instructions='" + instructions + '\'' +
+                ", image='" + image + '\'' +
                 '}';
     }
 }
