@@ -9,7 +9,6 @@ import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -69,15 +68,15 @@ public class CocktailServiceTest {
     void testFindByDrunkId() {
         CocktailEntity cocktailEntity = new CocktailEntity();
         cocktailEntity.setId(UUID.randomUUID());
-        cocktailEntity.setIdDrunk("kor");
+        cocktailEntity.setIdDrink("kor");
         cocktailEntity.setName("some name here");
         testEntityManager.persist(cocktailEntity);
         testEntityManager.flush();
 
-        Collection<CocktailEntity> kor = cocktailRepository.findByIdDrunkIn(Collections.singleton("kor"));
+        Collection<CocktailEntity> kor = cocktailRepository.findByIdDrinkIn(Collections.singleton("kor"));
         Assertions.assertNotNull(kor);
         Assertions.assertEquals(1, kor.size());
-        Assertions.assertEquals("kor", kor.stream().findAny().get().getIdDrunk());
+        Assertions.assertEquals("kor", kor.stream().findAny().get().getIdDrink());
 
     }
 

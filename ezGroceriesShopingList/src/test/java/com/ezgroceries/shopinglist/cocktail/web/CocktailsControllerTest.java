@@ -112,7 +112,7 @@ public class CocktailsControllerTest {
         CocktailEntity cocktailEntity = new CocktailEntity();
 
         cocktailEntity.setId(UUID.randomUUID());
-        cocktailEntity.setIdDrunk(resource.getIdDrink());
+        cocktailEntity.setIdDrink(resource.getIdDrink());
         cocktailEntity.setIngredients(Stream.of(resource.getStrIngredient1(), resource.getStrIngredient2(), resource.getStrIngredient3())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet()));

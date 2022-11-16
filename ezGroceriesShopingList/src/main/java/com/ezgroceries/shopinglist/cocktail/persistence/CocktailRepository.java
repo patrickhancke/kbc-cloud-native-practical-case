@@ -7,6 +7,8 @@ import org.springframework.data.repository.CrudRepository;
 public interface CocktailRepository extends CrudRepository<CocktailEntity, UUID> {
 
     CocktailEntity findByName(String name);
-    Collection<CocktailEntity> findByIdDrunkIn(Collection<String> drunkIds);
+    Collection<CocktailEntity> findByIdDrinkIn(Collection<String> drunkIds);
+
+    Collection<CocktailEntity> findByNameContainingIgnoreCase(String searchTerm);
 
 }

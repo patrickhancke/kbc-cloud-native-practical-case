@@ -21,7 +21,7 @@ public class CocktailEntity {
     private UUID id;
 
     @Column(name = "id_drunk")
-    private String idDrunk;
+    private String idDrink;
 
     @Column(name = "name")
     private String name;
@@ -66,12 +66,12 @@ public class CocktailEntity {
         this.ingredients = ingredients;
     }
 
-    public String getIdDrunk() {
-        return idDrunk;
+    public String getIdDrink() {
+        return idDrink;
     }
 
-    public void setIdDrunk(String idDrunk) {
-        this.idDrunk = idDrunk;
+    public void setIdDrink(String idDrunk) {
+        this.idDrink = idDrunk;
     }
 
     public Set<ShoppingListEntity> getShoppingLists() {
@@ -127,21 +127,21 @@ public class CocktailEntity {
             return false;
         }
         CocktailEntity that = (CocktailEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(idDrunk, that.idDrunk) && Objects.equals(name, that.name)
+        return Objects.equals(id, that.id) && Objects.equals(idDrink, that.idDrink) && Objects.equals(name, that.name)
                 && Objects.equals(ingredients, that.ingredients) && Objects.equals(glass, that.glass) && Objects.equals(
                 instructions, that.instructions) && Objects.equals(image, that.image);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, idDrunk, name, ingredients, glass, instructions, image);
+        return Objects.hash(id, idDrink, name, ingredients, glass, instructions, image);
     }
 
     @Override
     public String toString() {
         return "CocktailEntity{" +
                 "id=" + id +
-                ", idDrunk='" + idDrunk + '\'' +
+                ", idDrunk='" + idDrink + '\'' +
                 ", name='" + name + '\'' +
                 ", ingredients=" + ingredients +
                 ", glass='" + glass + '\'' +

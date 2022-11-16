@@ -52,17 +52,17 @@ public class CocktailsService {
             return Collections.emptyList();
         }
 
-        Collection<CocktailEntity> byIdDrunkIn = cocktailRepository.findByIdDrunkIn(
+        Collection<CocktailEntity> byIdDrinkIn = cocktailRepository.findByIdDrinkIn(
                 cocktailDBResponse.getDrinks().stream().map(DrinkResource::getIdDrink).collect(Collectors.toList()));
 
-        if (Objects.equals(byIdDrunkIn.size(), cocktailDBResponse.getDrinks().size())) {
-            return byIdDrunkIn.stream().map(this::transform).collect(Collectors.toList());
+        if (Objects.equals(byIdDrinkIn.size(), cocktailDBResponse.getDrinks().size())) {
+            return byIdDrinkIn.stream().map(this::transform).collect(Collectors.toList());
         }
 
         Collection<CocktailEntity> cocktailEntities = populateCocktailTable(cocktailDBResponse.getDrinks().stream()
-                .filter(cocktail -> !byIdDrunkIn.stream().map(CocktailEntity::getIdDrunk).collect(Collectors.toList()).contains(cocktail.getIdDrink()))
+                .filter(cocktail -> !byIdDrinkIn.stream().map(CocktailEntity::getIdDrink).collect(Collectors.toList()).contains(cocktail.getIdDrink()))
                 .collect(Collectors.toList()));
-        cocktailEntities.addAll(byIdDrunkIn);
+        cocktailEntities.addAll(byIdDrinkIn);
         return cocktailEntities.stream().map(this::transform).collect(Collectors.toList());
     }
 
@@ -78,7 +78,7 @@ public class CocktailsService {
         CocktailEntity cocktailEntity = new CocktailEntity();
 
         cocktailEntity.setId(UUID.randomUUID());
-        cocktailEntity.setIdDrunk(resource.getIdDrink());
+        cocktailEntity.setIdDrink(resource.getIdDrink());
         cocktailEntity.setIngredients(Stream.of(resource.getStrIngredient1(), resource.getStrIngredient2(), resource.getStrIngredient3())
                 .filter(Objects::nonNull)
                 .collect(Collectors.toSet()));
