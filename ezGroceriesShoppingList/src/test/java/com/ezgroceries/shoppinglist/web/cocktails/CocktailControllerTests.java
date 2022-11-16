@@ -1,16 +1,12 @@
 package com.ezgroceries.shoppinglist.web.cocktails;
 
-import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
-import com.ezgroceries.shoppinglist.web.cocktails.CocktailController;
-import com.ezgroceries.shoppinglist.web.cocktails.CocktailManager;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
 import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
@@ -27,21 +23,32 @@ public class CocktailControllerTests {
     @Autowired
     private MockMvc mockMvc;
 
-    //copy from stub
-    private Cocktail margerita = new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4", "Margerita",
+    //Old test dummies, copied from stub
+    private static final Cocktail margerita = new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4", "Margerita",
             "Cocktail glass", "Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten..",
             "https://www.thecocktaildb.com/images/media/drink/wpxpvu1439905379.jpg",
             new String[] { "Tequila", "Triple sec", "Lime juice", "Salt"});
 
-    @MockBean
-    private CocktailManager cocktailManager;
+    //New test dummies:
+    private static final CocktailDBResponse margeritaDbResp = new CocktailDBResponse();
+    private static final CocktailDBResponse.DrinkResource drinkResource = new CocktailDBResponse.DrinkResource();
+    static {
+        drinkResource.setIdDrink("testId");
+        drinkResource.setStrDrink("Margerita");
+        drinkResource.setStrGlass("Cocktail glass");
+        margeritaDbResp.setDrinks(List.of(drinkResource));
+    }
+
+    //@MockBean
+    //private CocktailManager cocktailManager; //old mockbean
+    @MockBean CocktailDBClient cocktailDBClient;
 
 
     @Test
     public void getAllCocktails() throws Exception{
-        given(cocktailManager.searchCocktail("Russian"))
-                .willReturn(List.of(margerita));
 
+        //given(cocktailManager.searchCocktail("Russian")).willReturn(List.of(margerita));
+        given(cocktailDBClient.searchCocktails("Russian")).willReturn(margeritaDbResp);
 
         mockMvc.perform(get("/cocktails").param("search","Russian"))
                 .andExpect(status().isOk())
@@ -50,8 +57,8 @@ public class CocktailControllerTests {
                 .andExpect(jsonPath("$[0].glass").value("Cocktail glass"))
                 .andExpect(jsonPath("$[0].name").value("Margerita"));
 
-        verify(cocktailManager).searchCocktail("Russian");
-
+        //verify(cocktailManager).searchCocktail("Russian");
+        verify(cocktailDBClient).searchCocktails("Russian");
     }
 
 

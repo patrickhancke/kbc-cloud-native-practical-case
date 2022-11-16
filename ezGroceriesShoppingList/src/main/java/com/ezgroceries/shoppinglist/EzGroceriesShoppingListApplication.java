@@ -3,10 +3,12 @@ package com.ezgroceries.shoppinglist;
 import com.ezgroceries.shoppinglist.config.AppConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @Import(AppConfig.class)
+@EnableFeignClients
 //@EntityScan("com.ezgroceries.shoppinglist")
 public class EzGroceriesShoppingListApplication {
 
