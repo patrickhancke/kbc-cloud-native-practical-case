@@ -177,6 +177,8 @@ Response:
   ...
 ```
 
+**NOTE**: if you get a Java stack trace with certificate validation issues, the McAfee network proxy is probably the reason why. To troubleshoot, do the ``https://www.thecocktaildb.com/api/..`` API call from ``Postman`` to verify you face the same issue. If that's the case, the only option is to check the [OpenFeign Spring Boot properties](https://cloud.spring.io/spring-cloud-openfeign/reference/html/appendix.html) and disable the SSL validation. 
+
 ## Testing
 
 Adapt your existing ``MockMVC`` test to use a mocked ``CocktailDBClient``, instruct the mock to return Cocktails that
