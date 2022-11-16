@@ -1,12 +1,12 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
 import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
+import com.ezgroceries.shoppinglist.web.cocktails.CocktailManager;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //@Import(AppConfig.class)
 //@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @WebMvcTest
-@AutoConfigureMockMvc
+//@AutoConfigureMockMvc
 public class ShoppingControllerTests {
     private static final String URLPREFIX = "http://localhost";
 
@@ -53,6 +53,10 @@ public class ShoppingControllerTests {
 
     @MockBean
     private ShoppingListManager shoppingListManager;
+
+    @MockBean
+    private CocktailManager cocktailManager; //this to get the tests to work, fails on CocktailManager init
+    // TODO other option is to use profiles so the feignClient is not used here?
 
     @Test
     public void testBasicCall() throws Exception{
@@ -91,7 +95,8 @@ public class ShoppingControllerTests {
                 .andReturn();
     }
 
-    @Test void getList() throws Exception {
+    @Test
+    void getList() throws Exception {
         //get non-existing
         mockMvc.perform(get("/shopping-lists/"+dummyListId))
                 .andExpect(status().isOk())
@@ -109,9 +114,8 @@ public class ShoppingControllerTests {
                 .andReturn();
     }
 
-    @Test void addCocktailToList() throws Exception {
-        //TODO need mock perform?
-
+    @Test
+    void addCocktailToList() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(margerita);
         log.info("json made: " + json);
