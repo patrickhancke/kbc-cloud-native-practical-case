@@ -30,7 +30,7 @@ public class StubShoppingListManager implements ShoppingListManager{
 
     @Override
     public ShoppingList getShoppingList(String id) {
-        log.info("returning default stephanie list instead of " + id);
+        log.info("returning default stephanie list instead of {}", id);
         return stephanieDummyShoppingList;
     }
 

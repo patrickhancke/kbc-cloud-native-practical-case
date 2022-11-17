@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class SiteCocktailManager implements CocktailManager {
     private static final Logger log = LoggerFactory.getLogger(SiteCocktailManager.class);
 

@@ -23,7 +23,7 @@ public class ShoppingController {
 
     @GetMapping(value="/shopping-lists/{shoppingListId}")
     public ResponseEntity<ShoppingList> getShoppingList(@PathVariable(name="shoppingListId") String listId){
-        log.info("Getting shopping list " + listId);
+        log.info("Getting shopping list {}", listId);
         ShoppingList found = shoppingListManager.getShoppingList(listId);
         return ResponseEntity.ok().body(found);
     } //TODO now always returning OK, also set 'not found' logic
@@ -39,7 +39,7 @@ public class ShoppingController {
     public ResponseEntity createShoppingList(@RequestBody ShoppingList shoppingList) {
 
         String name = shoppingList.getName();
-        log.info("create shopping list for " + name);
+        log.info("create shopping list for {}", name);
         String listId = shoppingListManager.createShoppingList(name);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
@@ -54,7 +54,7 @@ public class ShoppingController {
     @PostMapping(value = "/shopping-lists/{shoppingListId}/cocktails")
     public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") String listId, @RequestBody Cocktail cocktail) {
 
-        log.info("Add cocktail " + cocktail.getCocktailId() + " to shopping list " + listId);
+        log.info("Add cocktail {} to shopping list {}", cocktail.getCocktailId(), listId);
         shoppingListManager.addCocktailToShoppingList(listId, cocktail);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
