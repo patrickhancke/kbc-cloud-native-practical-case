@@ -5,13 +5,18 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
+@Cacheable
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @Table(name = "COCKTAIL")
 @Entity(name = "CocktailEntity")
 public class CocktailEntity {
@@ -39,6 +44,7 @@ public class CocktailEntity {
     @Column(name = "image_link")
     private String image;
 
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany(mappedBy = "cocktails")
     private Set<ShoppingListEntity> shoppingLists;
 
