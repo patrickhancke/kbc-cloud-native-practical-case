@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
-import com.ezgroceries.shopinglist.cocktail.CocktailDBClient;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse.DrinkResource;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
@@ -40,8 +39,8 @@ public class CocktailServiceTest {
 
     @Test
     void testSearch() {
-        CocktailsService cocktailsService = new CocktailsService(cocktailRepository, cocktailDBClient);
-        Collection<Cocktail> test = cocktailsService.searchByTerm("test");
+        CocktailService cocktailService = new CocktailService(cocktailRepository, cocktailDBClient);
+        Collection<Cocktail> test = cocktailService.searchByTerm("test");
 
         Assertions.assertNotNull(test);
         Assertions.assertEquals("fancy cocktail", test.stream().findAny().get().getName());

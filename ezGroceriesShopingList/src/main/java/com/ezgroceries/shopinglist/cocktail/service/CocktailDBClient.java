@@ -1,5 +1,6 @@
-package com.ezgroceries.shopinglist.cocktail;
+package com.ezgroceries.shopinglist.cocktail.service;
 
+import com.ezgroceries.shopinglist.cocktail.CocktailDBResponse;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
 import java.util.Collection;

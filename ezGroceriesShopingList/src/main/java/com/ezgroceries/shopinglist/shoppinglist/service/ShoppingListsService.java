@@ -1,29 +1,36 @@
 package com.ezgroceries.shopinglist.shoppinglist.service;
 
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
-import com.ezgroceries.shopinglist.cocktail.service.CocktailsService;
+import com.ezgroceries.shopinglist.cocktail.service.CocktailTransformer;
+import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
+import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListEntity;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListRepository;
 import java.util.Optional;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
-@Controller
+@Service
 public class ShoppingListsService {
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(ShoppingListsService.class);
     private final ShoppingListRepository shoppingListRepository;
-    private final CocktailsService cocktailsService;
+    private final CocktailService cocktailService;
 
-    public ShoppingListsService(ShoppingListRepository shoppingListRepository, CocktailsService cocktailsService) {
+    public ShoppingListsService(ShoppingListRepository shoppingListRepository, CocktailService cocktailService) {
         this.shoppingListRepository = shoppingListRepository;
-        this.cocktailsService = cocktailsService;
+        this.cocktailService = cocktailService;
     }
 
     public ShoppingList getShoppingList(UUID id) {
+        if (id == null) {
+            throw new EzGroceriesBadRequestException("id required");
+        }
         Optional<ShoppingListEntity> shoppingList = shoppingListRepository.findById(id);
         if (shoppingList.isEmpty()) {
             throw new EzGroceriesNotFoundException("shopping list with id: " + id + " not found");
@@ -32,14 +39,18 @@ public class ShoppingListsService {
         return transform(shoppingList.get());
     }
 
-    public int update(UUID shoppingListId, UUID cocktailId) {
+    public int addCocktailToShoppingList(UUID shoppingListId, UUID cocktailId) {
+        if (shoppingListId == null || cocktailId == null) {
+            throw new EzGroceriesBadRequestException("id required!");
+        }
+
         Optional<ShoppingListEntity> shoppingList = shoppingListRepository.findById(shoppingListId);
         if (shoppingList.isEmpty()) {
             throw new EzGroceriesNotFoundException("shopping list with id: " + shoppingListId + " not found");
         }
-        CocktailEntity cocktail = cocktailsService.getCocktailEntity(cocktailId);
-        LoggerFactory.getLogger(this.getClass()).error("cocktail: " + cocktail);
-        shoppingList.get().getCocktails().add(cocktail);
+        CocktailEntity cocktail = cocktailService.getCocktailEntity(cocktailId);
+        LOGGER.debug("cocktail: {}", cocktail);
+        shoppingList.get().addCocktail(cocktail);
         shoppingListRepository.save(shoppingList.get());
 
         return 1;
@@ -58,8 +69,11 @@ public class ShoppingListsService {
         shoppingList.setShoppingListId(entity.getId());
         shoppingList.setName(entity.getName());
 
-        shoppingList.setCocktails(entity.getCocktails().stream().map(cocktailsService::transform).collect(Collectors.toList()));
-        shoppingList.setIngredients(shoppingList.getCocktails().stream().flatMap(element -> element.getIngredients().stream()).collect(Collectors.toSet()));
+        Set<CocktailEntity> cocktails = entity.getCocktails();
+        if (cocktails != null) {
+            shoppingList.setCocktails(cocktails.stream().map(CocktailTransformer::transform).collect(Collectors.toList()));
+            shoppingList.setIngredients(entity.getCocktails().stream().flatMap(element -> element.getIngredients().stream()).collect(Collectors.toSet()));
+        }
 
         return shoppingList;
     }

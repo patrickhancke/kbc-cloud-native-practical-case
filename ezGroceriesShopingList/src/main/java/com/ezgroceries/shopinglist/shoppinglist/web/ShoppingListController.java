@@ -1,5 +1,6 @@
 package com.ezgroceries.shopinglist.shoppinglist.web;
 
+import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
@@ -12,7 +13,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.net.URI;
 import java.util.UUID;
-import java.util.stream.Collectors;
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import org.slf4j.Logger;
@@ -52,11 +52,7 @@ public class ShoppingListController {
     @ResponseBody
     @GetMapping("/shopping-lists/{shoppingListId}")
     public ShoppingList getShoppingList(@PathVariable(name = "shoppingListId") UUID shoppingListId) {
-        ShoppingList shoppingList = shoppingListsService.getShoppingList(shoppingListId);
-        shoppingList.setIngredients(shoppingList.getCocktails().stream()
-                .flatMap(cocktail -> cocktail.getIngredients().stream()).collect(Collectors.toSet()));
-
-        return shoppingList;
+        return shoppingListsService.getShoppingList(shoppingListId);
     }
 
     @Operation(summary = "create a shopping list")
@@ -77,8 +73,7 @@ public class ShoppingListController {
                     description = "shopping list name",
                     content = @Content(mediaType = "application/json"),
                     required = true)
-            @RequestBody
-            @Valid ShoppingList requestShoppingList) {
+            @Valid @RequestBody ShoppingList requestShoppingList) {
         ShoppingList shoppingList = shoppingListsService.createShoppingList(requestShoppingList.getName());
         return entityWithLocation(shoppingList.getShoppingListId());
     }
@@ -102,7 +97,7 @@ public class ShoppingListController {
             @Size(max = 100, message = "parameter max size exceeded")
             @Parameter(description = "cocktail uuid", required = true)
             @RequestParam UUID cocktailId) {
-        shoppingListsService.update(shoppingListId, cocktailId);
+        shoppingListsService.addCocktailToShoppingList(shoppingListId, cocktailId);
         return entityWithLocation(cocktailId);
     }
 
@@ -113,8 +108,15 @@ public class ShoppingListController {
         // just return empty 404
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler({ EzGroceriesBadRequestException.class})
+    public void handleBadRequest(Exception ex) {
+        LOGGER.error(ex.getMessage());
+        // just return empty 400
+    }
+
     private ResponseEntity<Void> entityWithLocation(Object resourceId) {
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/" + resourceId.toString()).build().toUri();
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{itemId}").buildAndExpand(resourceId.toString()).toUri();
         return ResponseEntity.created(uri).build();
     }
 }

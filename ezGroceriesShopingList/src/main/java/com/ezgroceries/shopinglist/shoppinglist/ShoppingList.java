@@ -5,13 +5,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
 public class ShoppingList {
 
     private UUID shoppingListId;
-    @Valid
     @Size(max = 100, message = "maximum param length reached")
     private String name;
     private Set<String> ingredients;

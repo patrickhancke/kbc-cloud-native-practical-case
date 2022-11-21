@@ -1,7 +1,7 @@
 package com.ezgroceries.shopinglist.cocktail.web;
 
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
-import com.ezgroceries.shopinglist.cocktail.service.CocktailsService;
+import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class CocktailsController {
+public class CocktailController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CocktailsController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(CocktailController.class);
 
-    private final CocktailsService cocktailsService;
+    private final CocktailService cocktailService;
 
-    public CocktailsController(CocktailsService cocktailsService) {
-        this.cocktailsService = cocktailsService;
+    public CocktailController(CocktailService cocktailService) {
+        this.cocktailService = cocktailService;
     }
 
     @Operation(summary = "get all cocktails")
@@ -43,7 +43,7 @@ public class CocktailsController {
             @Size(max = 100, message = "maximum param length reached")
             @RequestParam(value = "searchTerm", required = false)
                     String searchTerm) {
-        LOGGER.info("searchTerm: " + searchTerm);
-        return cocktailsService.searchByTerm(searchTerm);
+        LOGGER.info("searchTerm: {}", searchTerm);
+        return cocktailService.searchByTerm(searchTerm);
     }
 }
