@@ -8,12 +8,17 @@ import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundExceptio
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListEntity;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListRepository;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -33,6 +38,9 @@ public class ShoppingListsService {
         }
         Optional<ShoppingListEntity> shoppingList = shoppingListRepository.findById(id);
         if (shoppingList.isEmpty()) {
+            throw new EzGroceriesNotFoundException("shopping list with id: " + id + " not found");
+        }
+        if (!Objects.equals(getLoggedUsername(), shoppingList.get().getUsername())) {
             throw new EzGroceriesNotFoundException("shopping list with id: " + id + " not found");
         }
 
@@ -61,6 +69,7 @@ public class ShoppingListsService {
         ShoppingListEntity shoppingList = new ShoppingListEntity();
         shoppingList.setId(UUID.randomUUID());
         shoppingList.setName(name);
+        shoppingList.setUsername(getLoggedUsername());
         return transform(shoppingListRepository.save(shoppingList));
     }
 
@@ -76,5 +85,14 @@ public class ShoppingListsService {
         }
 
         return shoppingList;
+    }
+
+    private String getLoggedUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (!(authentication instanceof AnonymousAuthenticationToken))
+        {
+            return ((UserDetails) authentication.getPrincipal()).getUsername();
+        }
+        return null;
     }
 }

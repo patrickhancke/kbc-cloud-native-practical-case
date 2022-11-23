@@ -1,5 +1,27 @@
 package com.ezgroceries.shopinglist.shoppinglist.service;
-import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.*;
+
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_DRINK_ID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_GLASS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_IMAGE;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_INGREDIENT;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_INSTRUCTIONS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_NAME;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_1_UUID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_GLASS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_IMAGE;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_INGREDIENT;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_INGREDIENT2;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_INSTRUCTIONS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_NAME;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_2_UUID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_GLASS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_IMAGE;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_INGREDIENT;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_INGREDIENT2;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_NAME;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_UUID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.SHOPPING_LIST_NAME;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.SHOPPING_LIST_UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -29,6 +51,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.test.context.support.WithMockUser;
 
 @DataJpaTest
 public class ShoppingListServiceTest {
@@ -49,6 +72,7 @@ public class ShoppingListServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "Eminem")
     void testGetShoppingList() {
         ShoppingList shoppingList = shoppingListsService.getShoppingList(SHOPPING_LIST_UUID);
         assertNotNull(shoppingList);
@@ -105,6 +129,7 @@ public class ShoppingListServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "Eminem")
     void testCreateShoppingList() {
         ShoppingList newlyCreated = shoppingListsService.createShoppingList(SHOPPING_LIST_NAME);
         assertThat(newlyCreated.getName(), equalTo(SHOPPING_LIST_NAME));
@@ -112,6 +137,7 @@ public class ShoppingListServiceTest {
     }
 
     @Test
+    @WithMockUser(username = "Eminem")
     void testCreateInvalidShoppingList() {
         ShoppingList newlyCreated = shoppingListsService.createShoppingList(null);
         assertThat(newlyCreated.getName(), equalTo(null));
@@ -130,6 +156,7 @@ public class ShoppingListServiceTest {
 
         shoppingListEntity.setId(SHOPPING_LIST_UUID);
         shoppingListEntity.setName(SHOPPING_LIST_NAME);
+        shoppingListEntity.setUsername("Eminem");
         shoppingListEntity.setCocktails(Set.of(createCocktail(), createCocktail2()));
 
         return shoppingListEntity;

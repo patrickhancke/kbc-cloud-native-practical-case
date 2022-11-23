@@ -9,12 +9,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.ezgroceries.shopinglist.EzGroceriesShopingListApplication;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import config.TestConfig;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,11 +24,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest
 @ActiveProfiles("hsqldb")
+@ContextConfiguration(classes = {EzGroceriesShopingListApplication.class, TestConfig.class})
 public class ShoppingListControllerTest {
 
     private static final UUID SHOPPING_LIST_ID = UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71");
@@ -55,6 +60,7 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    @WithMockUser()
     public void testGetShoppingList() throws Exception {
         mockMvc.perform(get("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71"))
                 .andExpect(status().isOk())
@@ -64,12 +70,21 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = {"INVALID"})
+    public void testUnauthorizedGetShoppingList() throws Exception {
+        mockMvc.perform(get("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71"))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    @WithMockUser
     public void testInvalidIdGetShoppingList() throws Exception {
         mockMvc.perform(get("/shopping-lists/69dda986-1dd0-4466-a519-a972723dcd71"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser(username = "Eminem")
     public void testCreateShoppingList() throws Exception {
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setName("Stephanie's birthday");
@@ -80,6 +95,7 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testInvalidNameCreateShoppingList() throws Exception {
         ShoppingList shoppingList = new ShoppingList();
         shoppingList.setName("Vvvvvvvvvvveeeeeeerrrrrrrrrrryyyyyyyyyyy llllllllllloooooooooonnnnnnnnggggggg nnnnnnnnnnaaaaaaaaammmmmmmmmeeeeeeeee");
@@ -88,6 +104,7 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testAddCocktailToShoppingList() throws Exception {
         mockMvc.perform(post("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/cocktails?cocktailId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
                 .andExpect(status().isCreated())
@@ -96,12 +113,14 @@ public class ShoppingListControllerTest {
     }
 
     @Test
+    @WithMockUser
     public void testAddCocktailInvalidShoppingList() throws Exception {
         mockMvc.perform(post("/shopping-lists/d615ec78-fe93-467b-8d26-5d26d8eab073/cocktails?cocktailId=d615ec68-fe93-467b-8d26-5d26d8eab073"))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
+    @WithMockUser
     public void testMissingShoppingList() throws Exception {
         mockMvc.perform(post("/shopping-lists/d615ec78-fe93-467b-8d26-5d26d8eab073/cocktails?cocktailId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
                 .andExpect(status().isNotFound());

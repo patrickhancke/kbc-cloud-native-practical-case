@@ -2,6 +2,7 @@ package com.ezgroceries.shopinglist.shoppinglist.persistence;
 
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import javax.persistence.Cacheable;
@@ -29,6 +30,9 @@ public class ShoppingListEntity {
     @Column(name = "name")
     private String name;
 
+    @Column(name = "username")
+    private String username;
+
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -54,6 +58,14 @@ public class ShoppingListEntity {
         this.name = name;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public Set<CocktailEntity> getCocktails() {
         return cocktails;
     }
@@ -74,5 +86,33 @@ public class ShoppingListEntity {
             }
             cocktail.getShoppingLists().add(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ShoppingListEntity that = (ShoppingListEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(name, that.name) && Objects.equals(username, that.username)
+                && Objects.equals(cocktails, that.cocktails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, username, cocktails);
+    }
+
+    @Override
+    public String toString() {
+        return "ShoppingListEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", username='" + username + '\'' +
+                ", cocktails=" + cocktails +
+                '}';
     }
 }
