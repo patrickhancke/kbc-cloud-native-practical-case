@@ -2,11 +2,14 @@ package com.ezgroceries.shoppinglist.web.cocktails;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
+@Profile("stub")
 public class StubCocktailManager implements CocktailManager{
     private static final Logger log = LoggerFactory.getLogger(StubCocktailManager.class);
 

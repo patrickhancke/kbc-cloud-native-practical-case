@@ -3,6 +3,7 @@ package com.ezgroceries.shoppinglist.web.cocktails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,14 +11,14 @@ import java.util.List;
 
 
 @Component
+@Profile("site")
 public class SiteCocktailManager implements CocktailManager {
     private static final Logger log = LoggerFactory.getLogger(SiteCocktailManager.class);
 
-    @Autowired
-    private CocktailDBClient cocktailDBClient;
+    private final CocktailDBClient cocktailDBClient;
 
-    public SiteCocktailManager(){
-
+    public SiteCocktailManager(CocktailDBClient cocktailDBClient){
+        this.cocktailDBClient = cocktailDBClient;
     }
     //Hardcoded values
     private final Cocktail margerita = new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4", "Margerita",
