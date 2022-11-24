@@ -11,11 +11,12 @@ import org.springframework.context.annotation.Configuration;
 public class AppConfig {
 
 
+    /*
     @Bean
     public CocktailManager cocktailManager(){
         return new SiteCocktailManager();
     }
-
+*/
 
 /*
     @Bean
