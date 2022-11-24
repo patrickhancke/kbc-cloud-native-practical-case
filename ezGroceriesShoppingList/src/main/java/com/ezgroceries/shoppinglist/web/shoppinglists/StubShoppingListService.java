@@ -3,24 +3,28 @@ package com.ezgroceries.shoppinglist.web.shoppinglists;
 import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public class StubShoppingListManager implements ShoppingListManager{
-    private static final Logger log = LoggerFactory.getLogger(StubShoppingListManager.class);
+@Profile("stub")
+public class StubShoppingListService implements ShoppingListService {
+    private static final Logger log = LoggerFactory.getLogger(StubShoppingListService.class);
 
-    private final ShoppingList stephanieDummyShoppingList = new ShoppingList("90689338-499a-4c49-af90-f1e73068ad4f",
+    private final ShoppingList stephanieDummyShoppingList = new ShoppingList(UUID.randomUUID(),
             "Stephanie's birthday",
             new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
 
-    private final ShoppingList myDummyShoppingList = new ShoppingList("6c7d09c2-8a25-4d54-a979-25ae779d2465",
+    private final ShoppingList myDummyShoppingList = new ShoppingList(UUID.randomUUID(),
             "My birthday",
             new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
 
-    private final String dummyListId = "testId";
+    private final UUID dummyListId = UUID.randomUUID();
 
     @Override
     public List<ShoppingList> getAllShoppingLists() {
@@ -31,19 +35,19 @@ public class StubShoppingListManager implements ShoppingListManager{
     }
 
     @Override
-    public ShoppingList getShoppingList(String id) {
+    public Optional<ShoppingList> getShoppingList(UUID id) {
         log.info("returning default stephanie list instead of {}", id);
-        return stephanieDummyShoppingList;
+        return Optional.of(stephanieDummyShoppingList);
     }
 
     @Override
-    public String createShoppingList(String name) {
+    public UUID createShoppingList(String name) {
         log.info("doing nothing really..");
         return dummyListId;
     }
 
     @Override
-    public void addCocktailToShoppingList(String listId, Cocktail cocktail) {
+    public void addCocktailToShoppingList(UUID listId, Cocktail cocktail) {
         log.info("doing nothing really..");
     }
 }
