@@ -78,11 +78,11 @@
             <artifactId>hsqldb</artifactId>
         </dependency>
 
-        <!-- TODO check if needed
+
         <dependency>
             <groupId>io.github.openfeign</groupId>
             <artifactId>feign-okhttp</artifactId>
-        </dependency> -->
+        </dependency>
     </dependencies>
 
     <build>

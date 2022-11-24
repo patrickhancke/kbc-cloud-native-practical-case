@@ -39,16 +39,16 @@ public class CocktailControllerTests {
         margeritaDbResp.setDrinks(List.of(drinkResource));
     }
 
-    //@MockBean
-    //private CocktailManager cocktailManager; //old mockbean
-    @MockBean CocktailDBClient cocktailDBClient;
+    @MockBean
+    private CocktailManager cocktailManager; //old mockbean
+    //@MockBean CocktailDBClient cocktailDBClient;
 
 
     @Test
     public void getAllCocktails() throws Exception{
 
-        //given(cocktailManager.searchCocktail("Russian")).willReturn(List.of(margerita));
-        given(cocktailDBClient.searchCocktails("Russian")).willReturn(margeritaDbResp);
+        given(cocktailManager.searchCocktail("Russian")).willReturn(List.of(margerita));
+        //given(cocktailDBClient.searchCocktails("Russian")).willReturn(margeritaDbResp);
 
         mockMvc.perform(get("/cocktails").param("search","Russian"))
                 .andExpect(status().isOk())
@@ -57,8 +57,8 @@ public class CocktailControllerTests {
                 .andExpect(jsonPath("$[0].glass").value("Cocktail glass"))
                 .andExpect(jsonPath("$[0].name").value("Margerita"));
 
-        //verify(cocktailManager).searchCocktail("Russian");
-        verify(cocktailDBClient).searchCocktails("Russian");
+        verify(cocktailManager).searchCocktail("Russian");
+        //verify(cocktailDBClient).searchCocktails("Russian");
     }
 
 

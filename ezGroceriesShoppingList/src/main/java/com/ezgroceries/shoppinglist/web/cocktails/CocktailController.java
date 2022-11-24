@@ -23,7 +23,7 @@ public class CocktailController {
     @GetMapping(value = "/cocktails")
     public ResponseEntity<List<Cocktail>> getCocktails(@RequestParam String search) {
 
-        log.info("cocktail search for " + search);
+        log.info("cocktail search for {}", search);
 
         List<Cocktail> result = cocktailManager.searchCocktail(search);
         return ResponseEntity.ok().body(result);
