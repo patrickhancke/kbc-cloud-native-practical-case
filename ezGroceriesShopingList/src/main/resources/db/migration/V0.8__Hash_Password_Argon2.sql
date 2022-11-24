@@ -1,0 +1,1 @@
+update users set password = '$argon2i$v=19$m=16,t=2,p=1$UG1qdmw5T2hINHJuenAyUg$Y2ONSItoJwbLelLr4zRFDg';
