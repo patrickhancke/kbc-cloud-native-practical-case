@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class StubCocktailManager implements CocktailManager{
     private static final Logger log = LoggerFactory.getLogger(StubCocktailManager.class);
 
@@ -33,7 +32,7 @@ public class StubCocktailManager implements CocktailManager{
 
     @Override
     public List<Cocktail> searchCocktail(String search){
-        log.info("returning default margeritas instead of " + search);
+        log.info("returning default margeritas instead of {}", search);
         return getAllCocktails();
     }
 

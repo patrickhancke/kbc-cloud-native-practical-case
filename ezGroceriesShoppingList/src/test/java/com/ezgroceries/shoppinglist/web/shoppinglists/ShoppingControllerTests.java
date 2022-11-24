@@ -86,7 +86,7 @@ public class ShoppingControllerTests {
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(myDummyShoppingList);
-        log.info("json made: " + json);
+        log.info("json made: {}", json);
 
         mockMvc.perform(post("/shopping-lists")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -118,7 +118,7 @@ public class ShoppingControllerTests {
     void addCocktailToList() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(margerita);
-        log.info("json made: " + json);
+        log.info("json made: {}", json);
 
         mockMvc.perform(post("/shopping-lists/"+dummyListId+"/cocktails")
                         .contentType(MediaType.APPLICATION_JSON)
