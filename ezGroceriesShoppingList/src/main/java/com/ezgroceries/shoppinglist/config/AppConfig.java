@@ -16,9 +16,11 @@ public class AppConfig {
         return new SiteCocktailManager();
     }
 
+
+/*
     @Bean
     public ShoppingListManager shoppingListManager(){
         return new StubShoppingListManager();
     }
-
+*/
 }
