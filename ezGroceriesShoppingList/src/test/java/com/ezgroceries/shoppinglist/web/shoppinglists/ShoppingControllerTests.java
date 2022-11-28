@@ -1,7 +1,7 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
 import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
-import com.ezgroceries.shoppinglist.web.cocktails.CocktailManager;
+import com.ezgroceries.shoppinglist.web.cocktails.CocktailService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -12,10 +12,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -43,10 +40,11 @@ public class ShoppingControllerTests {
             , new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"}
     );
 
+    private final Set<String> stubIngredients = new HashSet<>(Arrays.asList("Tequila", "Triple sec", "Lime juice", "Salt"));
     private final Cocktail margerita = new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4", "Margerita",
             "Cocktail glass", "Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten..",
             "https://www.thecocktaildb.com/images/media/drink/wpxpvu1439905379.jpg",
-            new String[] { "Tequila", "Triple sec", "Lime juice", "Salt"});
+            stubIngredients);
 
     private final UUID dummyListId = UUID.randomUUID();
 
@@ -58,7 +56,7 @@ public class ShoppingControllerTests {
     private ShoppingListService shoppingListManager;
 
     @MockBean
-    private CocktailManager cocktailManager; //this to get the tests to work, fails on CocktailManager init
+    private CocktailService cocktailManager; //this to get the tests to work, fails on CocktailManager init
     // TODO other option is to use profiles so the feignClient is not used here?
 
     @Test

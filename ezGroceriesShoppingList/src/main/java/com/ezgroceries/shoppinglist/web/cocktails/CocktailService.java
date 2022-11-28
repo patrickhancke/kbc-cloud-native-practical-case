@@ -3,7 +3,7 @@ package com.ezgroceries.shoppinglist.web.cocktails;
 
 import java.util.List;
 
-public interface CocktailManager {
+public interface CocktailService {
 
     List<Cocktail> getAllCocktails();
 

@@ -7,7 +7,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.BDDMockito.given;
@@ -24,10 +27,12 @@ public class CocktailControllerTests {
     private MockMvc mockMvc;
 
     //Old test dummies, copied from stub
+    private static final Set<String> stubIngredients = new HashSet<>(Arrays.asList("Tequila", "Triple sec", "Lime juice", "Salt"));
+
     private static final Cocktail margerita = new Cocktail("23b3d85a-3928-41c0-a533-6538a71e17c4", "Margerita",
             "Cocktail glass", "Rub the rim of the glass with the lime slice to make the salt stick to it. Take care to moisten..",
             "https://www.thecocktaildb.com/images/media/drink/wpxpvu1439905379.jpg",
-            new String[] { "Tequila", "Triple sec", "Lime juice", "Salt"});
+            stubIngredients);
 
     //New test dummies:
     private static final CocktailDBResponse margeritaDbResp = new CocktailDBResponse();
@@ -40,7 +45,7 @@ public class CocktailControllerTests {
     }
 
     @MockBean
-    private CocktailManager cocktailManager; //old mockbean
+    private CocktailService cocktailManager; //old mockbean
     //@MockBean CocktailDBClient cocktailDBClient;
 
 

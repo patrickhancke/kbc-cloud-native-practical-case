@@ -10,7 +10,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -20,7 +19,7 @@ public class ShoppingController {
     private final ShoppingListService shoppingListService;
 
     public ShoppingController(ShoppingListService shoppingListService){
-        log.info("create shoppingcontroller!");
+        log.info("Create shoppingcontroller!");
         this.shoppingListService = shoppingListService;
     }
 

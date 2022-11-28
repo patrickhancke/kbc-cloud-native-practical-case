@@ -12,20 +12,24 @@ import java.util.List;
 @RestController
 public class CocktailController {
     private static final Logger log = LoggerFactory.getLogger(CocktailController.class);
-    private final CocktailManager cocktailManager;
+    private final CocktailService cocktailService;
 
 
-    public CocktailController(CocktailManager cocktailManager){
-        this.cocktailManager = cocktailManager;
+    public CocktailController(CocktailService cocktailService){
+        log.info("Create CocktailController");
+        this.cocktailService = cocktailService;
     }
 
 
     @GetMapping(value = "/cocktails")
-    public ResponseEntity<List<Cocktail>> getCocktails(@RequestParam String search) {
+    public ResponseEntity<List<Cocktail>> getCocktails(@RequestParam(required = false) String search) {
 
         log.info("cocktail search for {}", search);
-
-        List<Cocktail> result = cocktailManager.searchCocktail(search);
+        List<Cocktail> result;
+        if (search==null)
+            result = cocktailService.getAllCocktails();
+        else
+            result = cocktailService.searchCocktail(search);
         return ResponseEntity.ok().body(result);
     }
 }
