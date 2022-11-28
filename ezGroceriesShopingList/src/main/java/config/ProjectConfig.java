@@ -39,7 +39,9 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/cocktails/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/shopping-lists/**").hasAnyRole("USER", "ADMIN", "ROLE_USER")
-                .mvcMatchers(HttpMethod.POST, "/shopping-lists/**").hasAnyRole("USER", "ADMIN", "ROLE_USER");
+                .mvcMatchers(HttpMethod.POST, "/shopping-lists/**").hasAnyRole("USER", "ADMIN", "ROLE_USER")
+                .mvcMatchers(HttpMethod.GET, "/meals/**").permitAll()
+                .mvcMatchers("/**").authenticated();
         http.httpBasic();
         http.csrf().disable();
     }

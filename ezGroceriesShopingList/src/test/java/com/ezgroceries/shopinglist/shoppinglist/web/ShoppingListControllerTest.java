@@ -2,6 +2,7 @@ package com.ezgroceries.shopinglist.shoppinglist.web;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doThrow;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -13,6 +14,7 @@ import com.ezgroceries.shopinglist.EzGroceriesShopingListApplication;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
+import com.ezgroceries.shopinglist.meal.service.MealService;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,16 +48,25 @@ public class ShoppingListControllerTest {
     @MockBean
     private CocktailService cocktailService;
 
+    @MockBean
+    private MealService mealService;
+
     @BeforeEach
     void setUp() {
         given(shoppingListsService.getShoppingList(UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71")))
                 .willReturn(createShoppingList());
-        given(shoppingListsService.getShoppingList(UUID.fromString("69dda986-1dd0-4466-a519-a972723dcd71")))
-                .willThrow(EzGroceriesBadRequestException.class);
-        given(shoppingListsService.addCocktailToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073")))
-                .willThrow(EzGroceriesNotFoundException.class);
-        given(shoppingListsService.addCocktailToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec68-fe93-467b-8d26-5d26d8eab073")))
-                .willThrow(EzGroceriesBadRequestException.class);
+        doThrow(EzGroceriesBadRequestException.class)
+                .when(shoppingListsService).getShoppingList(UUID.fromString("69dda986-1dd0-4466-a519-a972723dcd71"));
+        doThrow(EzGroceriesNotFoundException.class)
+                .when(shoppingListsService).addCocktailToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"));
+        doThrow(EzGroceriesBadRequestException.class)
+                .when(shoppingListsService).addCocktailToShoppingList(UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71"), UUID.fromString("69dda986-3dd0-4466-a519-a972723dcd71"));
+        doThrow(EzGroceriesNotFoundException.class)
+                .when(shoppingListsService).addCocktailToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec68-fe93-467b-8d26-5d26d8eab073"));
+        doThrow(EzGroceriesBadRequestException.class)
+                .when(shoppingListsService).addMealToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec68-fe93-467b-8d26-5d26d8eab073"));
+        doThrow(EzGroceriesBadRequestException.class)
+                .when(shoppingListsService).addMealToShoppingList(UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"), UUID.fromString("d615ec78-fe93-467b-8d26-5d26d8eab073"));
         given(shoppingListsService.createShoppingList(any())).willReturn(createShoppingList());
     }
 
@@ -67,6 +78,24 @@ public class ShoppingListControllerTest {
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("name").value(LIST_NAME))
                 .andExpect(jsonPath("shoppingListId").value(SHOPPING_LIST_ID.toString()));
+    }
+
+    @Test
+    public void testGetShppingListWithoutUser() throws Exception {
+        mockMvc.perform(get("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testAddCocktailWithoutUser() throws Exception {
+        mockMvc.perform(get("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/cocktails?cocktailId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    public void testAddMealWithoutUser() throws Exception {
+        mockMvc.perform(get("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/meals?mealId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
+                .andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -116,6 +145,36 @@ public class ShoppingListControllerTest {
     @WithMockUser
     public void testAddCocktailInvalidShoppingList() throws Exception {
         mockMvc.perform(post("/shopping-lists/d615ec78-fe93-467b-8d26-5d26d8eab073/cocktails?cocktailId=d615ec68-fe93-467b-8d26-5d26d8eab073"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @WithMockUser
+    public void testAddInvalidCocktailToShoppingList() throws Exception {
+        mockMvc.perform(post("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/cocktails?cocktailId=69dda986-3dd0-4466-a519-a972723dcd71"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void testAddMealToShoppingList() throws Exception {
+        mockMvc.perform(post("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/meals?mealId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/meals/d615ec78-fe93-467b-8d26-5d26d8eab073"));
+    }
+
+    @Test
+    @WithMockUser
+    public void testAddMealInvalidShoppingList() throws Exception {
+        mockMvc.perform(post("/shopping-lists/d615ec78-fe93-467b-8d26-5d26d8eab073/meals?mealId=d615ec78-fe93-467b-8d26-5d26d8eab073"))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @WithMockUser
+    public void testAddInvalidMealToShoppingList() throws Exception {
+        mockMvc.perform(post("/shopping-lists/69dda986-3dd0-4466-a519-a972723dcd71/cocktails?cocktailId=69dda986-3dd0-4466-a519-a972723dcd71"))
                 .andExpect(status().isBadRequest());
     }
 

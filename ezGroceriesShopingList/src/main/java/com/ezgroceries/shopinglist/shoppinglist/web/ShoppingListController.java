@@ -80,16 +80,19 @@ public class ShoppingListController {
 
     @Operation(summary = "add cocktails to a shopping list")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "shopping list found", content = {
+            @ApiResponse(responseCode = "201", description = "successfully added a cocktail to a shopping list", content = {
                     @Content(mediaType = "application/json", schema = @Schema)
             }, headers = @Header(name = "Location",
                     description = "the exact location of this newly created resource",
                     schema = @Schema(type = "url"))),
             @ApiResponse(responseCode = "400", description = "bad request invalid parameter/s", content = @Content),
+            @ApiResponse(responseCode = "401", description = "not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "not authorized", content = @Content),
             @ApiResponse(responseCode = "404", description = "resource not found", content = @Content),
             @ApiResponse(responseCode = "500", description = "internal server error", content = @Content),
     })
     @PostMapping("/shopping-lists/{shoppingListId}/cocktails")
+    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<Void> addCocktail(
             @Parameter(description = "shopping list uudi ", required = true)
             @PathVariable UUID shoppingListId,
@@ -99,6 +102,26 @@ public class ShoppingListController {
             @RequestParam UUID cocktailId) {
         shoppingListsService.addCocktailToShoppingList(shoppingListId, cocktailId);
         return entityWithLocation(cocktailId);
+    }
+
+    @Operation(summary = "add meal to a shopping list")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "successfully added a meal to a shopping list", content = {
+                    @Content(mediaType = "application/json", schema = @Schema)
+            }, headers = @Header(name = "Location",
+                    description = "the exact location of this newly created resource",
+                    schema = @Schema(type = "url"))),
+            @ApiResponse(responseCode = "400", description = "not authenticated", content = @Content),
+            @ApiResponse(responseCode = "401", description = "not authenticated", content = @Content),
+            @ApiResponse(responseCode = "403", description = "not authorized", content = @Content),
+            @ApiResponse(responseCode = "404", description = "not authorized", content = @Content),
+            @ApiResponse(responseCode = "500", description = "not authorized", content = @Content),
+    })
+    @PostMapping("/shopping-lists/{shoppingListId}/meals")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<Void> addMeal(@PathVariable UUID shoppingListId, @RequestParam UUID mealId) {
+        shoppingListsService.addMealToShoppingList(shoppingListId, mealId);
+        return entityWithLocation(mealId);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

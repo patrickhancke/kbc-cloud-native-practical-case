@@ -30,8 +30,7 @@ public class CocktailService {
 
     public CocktailEntity getCocktailEntity(UUID cocktailId) {
         Optional<CocktailEntity> cocktail = cocktailRepository.findById(cocktailId);
-        if (cocktail.isEmpty())
-        {
+        if (cocktail.isEmpty()) {
             throw new EzGroceriesNotFoundException("cocktail with id: " + cocktailId + " not found");
         }
 
@@ -40,8 +39,7 @@ public class CocktailService {
 
     public Collection<Cocktail> searchByTerm(String searchTerm) {
         CocktailDBResponse cocktailDBResponse = client.searchCocktails(searchTerm);
-        if (cocktailDBResponse == null)
-        {
+        if (cocktailDBResponse == null) {
             return Collections.emptyList();
         }
 
@@ -51,9 +49,9 @@ public class CocktailService {
         if (Objects.equals(byIdDrinkIn.size(), cocktailDBResponse.getDrinks().size())) {
             return byIdDrinkIn.stream().map(CocktailTransformer::transform).collect(Collectors.toList());
         }
-
+        List<String> existingDrinkIds = byIdDrinkIn.stream().map(CocktailEntity::getIdDrink).collect(Collectors.toList());
         Collection<CocktailEntity> cocktailEntities = populateCocktailTable(cocktailDBResponse.getDrinks().stream()
-                .filter(cocktail -> !byIdDrinkIn.stream().map(CocktailEntity::getIdDrink).collect(Collectors.toList()).contains(cocktail.getIdDrink()))
+                .filter(cocktail -> !existingDrinkIds.contains(cocktail.getIdDrink()))
                 .collect(Collectors.toList()));
         cocktailEntities.addAll(byIdDrinkIn);
         return cocktailEntities.stream().map(CocktailTransformer::transform).collect(Collectors.toList());

@@ -1,6 +1,7 @@
 package com.ezgroceries.shopinglist.shoppinglist;
 
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
+import com.ezgroceries.shopinglist.meal.web.Meal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -14,6 +15,7 @@ public class ShoppingList {
     private String name;
     private Set<String> ingredients;
     private List<Cocktail> cocktails = new ArrayList<>();
+    private List<Meal> meals = new ArrayList<>();
 
 
     public UUID getShoppingListId() {
@@ -46,5 +48,13 @@ public class ShoppingList {
 
     public void setCocktails(List<Cocktail> cocktails) {
         this.cocktails = cocktails;
+    }
+
+    public List<Meal> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(List<Meal> meals) {
+        this.meals = meals;
     }
 }

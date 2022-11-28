@@ -1,6 +1,8 @@
 package com.ezgroceries.shopinglist.shoppinglist.persistence;
 
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
+import com.ezgroceries.shopinglist.meal.persistence.MealEntity;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -42,6 +44,14 @@ public class ShoppingListEntity {
     )
     private Set<CocktailEntity> cocktails;
 
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "MEAL_SHOPPING_LIST",
+            joinColumns = @JoinColumn(name = "shopping_list_id"),
+            inverseJoinColumns = @JoinColumn(name = "meal_id")
+    )
+    private Set<MealEntity> meals;
+
     public UUID getId() {
         return id;
     }
@@ -66,7 +76,7 @@ public class ShoppingListEntity {
         this.username = username;
     }
 
-    public Set<CocktailEntity> getCocktails() {
+    public Collection<CocktailEntity> getCocktails() {
         return cocktails;
     }
 
@@ -85,6 +95,28 @@ public class ShoppingListEntity {
                 cocktail.setShoppingLists(new HashSet<>());
             }
             cocktail.getShoppingLists().add(this);
+        }
+    }
+
+    public Set<MealEntity> getMeals() {
+        return meals;
+    }
+
+    public void setMeals(Set<MealEntity> meals) {
+        this.meals = meals;
+    }
+
+    public void addMeal(MealEntity meal) {
+        if (this.meals == null) {
+            this.meals = new HashSet<>();
+        }
+        this.meals.add(meal);
+
+        if (meal != null) {
+            if (meal.getShoppingLists() == null) {
+                meal.setShoppingLists(new HashSet<>());
+            }
+            meal.getShoppingLists().add(this);
         }
     }
 

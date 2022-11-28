@@ -18,11 +18,29 @@ import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServi
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_IMAGE;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_INGREDIENT;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_INGREDIENT2;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_INSTRUCTIONS;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_NAME;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.COCKTAIL_3_UUID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_AREA;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_AREA_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_CATEGORY;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_CATEGORY_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_ID;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_ID_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_ID_MEAL;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_ID_MEAL_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_IMAGE;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_IMAGE_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_INGREDIENT;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_INGREDIENT_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_INSTRUCTIONS;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_INSTRUCTIONS_1;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_NAME;
+import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.MEAL_NAME_1;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.SHOPPING_LIST_NAME;
 import static com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListServiceTestConfiguration.SHOPPING_LIST_UUID;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
@@ -31,21 +49,27 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
+import com.ezgroceries.shopinglist.cocktail.Cocktail1Matcher;
 import com.ezgroceries.shopinglist.cocktail.Cocktail2Matcher;
 import com.ezgroceries.shopinglist.cocktail.Cocktail3Matcher;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
+import com.ezgroceries.shopinglist.meal.persistence.MealEntity;
+import com.ezgroceries.shopinglist.meal.persistence.MealRepository;
+import com.ezgroceries.shopinglist.meal.service.MealMatcher;
+import com.ezgroceries.shopinglist.meal.web.Meal;
 import com.ezgroceries.shopinglist.shoppinglist.ShoppingList;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListEntity;
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListRepository;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -60,13 +84,15 @@ public class ShoppingListServiceTest {
     @MockBean
     private CocktailService cocktailService;
     @Autowired
+    private MealRepository mealRepository;
+    @Autowired
     private ShoppingListRepository shoppingListRepository;
     private ShoppingListsService shoppingListsService;
 
     @BeforeEach
     void setup() {
         init();
-        shoppingListsService = new ShoppingListsService(shoppingListRepository, cocktailService);
+        shoppingListsService = new ShoppingListsService(shoppingListRepository, cocktailService, mealRepository);
         given(cocktailService.getCocktailEntity(COCKTAIL_3_UUID)).willReturn(createCocktail3());
         given(cocktailService.getCocktailEntity(SHOPPING_LIST_UUID)).willThrow(new EzGroceriesNotFoundException("error"));
     }
@@ -82,6 +108,14 @@ public class ShoppingListServiceTest {
         assertEquals(2, shoppingList.getCocktails().size());
         shoppingList.getCocktails().sort(Comparator.comparing(Cocktail::getName));
         assertThat(shoppingList.getCocktails(), hasItems(new Cocktail2Matcher()));
+        assertThat(shoppingList.getMeals(), hasItems(new MealMatcher()));
+    }
+
+    @Test
+    @WithMockUser(username = "John")
+    void testGetShoppingListOfAnotherUser() {
+        Assertions.assertThrows(EzGroceriesNotFoundException.class, () ->
+                shoppingListsService.getShoppingList(SHOPPING_LIST_UUID));
     }
 
     @Test
@@ -97,7 +131,7 @@ public class ShoppingListServiceTest {
     }
 
     @Test
-    @Disabled
+    @WithMockUser(username = "Eminem")
     void testAddCocktailToShoppingList() {
         shoppingListsService.addCocktailToShoppingList(SHOPPING_LIST_UUID, COCKTAIL_3_UUID);
 
@@ -105,7 +139,19 @@ public class ShoppingListServiceTest {
         assertThat(shoppingList.getCocktails().size(), equalTo(3));
         List<Cocktail> cocktails = shoppingList.getCocktails();
         cocktails.sort(Comparator.comparing(Cocktail::getName));
-        assertThat(cocktails, hasItem(new Cocktail3Matcher()));
+        assertThat(cocktails, containsInAnyOrder(new Cocktail2Matcher(), new Cocktail3Matcher(), new Cocktail1Matcher()));
+    }
+
+    @Test
+    @WithMockUser(username = "Eminem")
+    void testAddMealToShoppingList() {
+        shoppingListsService.addMealToShoppingList(SHOPPING_LIST_UUID, MEAL_ID_1);
+
+        ShoppingList shoppingList = shoppingListsService.getShoppingList(SHOPPING_LIST_UUID);
+        assertThat(shoppingList.getMeals().size(), equalTo(2));
+        List<Meal> meals = shoppingList.getMeals();
+        meals.sort(Comparator.comparing(Meal::getName));
+        assertThat(meals, hasItem(new MealMatcher()));
     }
 
     @Test
@@ -148,6 +194,8 @@ public class ShoppingListServiceTest {
         testEntityManager.persist(createCocktail());
         testEntityManager.persist(createCocktail2());
         testEntityManager.persist(createCocktail3());
+        testEntityManager.persist(createMeal());
+        testEntityManager.persist(createMeal1());
         testEntityManager.flush();
     }
 
@@ -157,7 +205,8 @@ public class ShoppingListServiceTest {
         shoppingListEntity.setId(SHOPPING_LIST_UUID);
         shoppingListEntity.setName(SHOPPING_LIST_NAME);
         shoppingListEntity.setUsername("Eminem");
-        shoppingListEntity.setCocktails(Set.of(createCocktail(), createCocktail2()));
+        shoppingListEntity.setCocktails(Stream.of(createCocktail(), createCocktail2()).collect(Collectors.toSet()));
+        shoppingListEntity.setMeals(Stream.of(createMeal()).collect(Collectors.toSet()));
 
         return shoppingListEntity;
     }
@@ -196,8 +245,34 @@ public class ShoppingListServiceTest {
         cocktailEntity.setGlass(COCKTAIL_3_GLASS);
         cocktailEntity.setImage(COCKTAIL_3_IMAGE);
         cocktailEntity.setIngredients(Set.of(COCKTAIL_3_INGREDIENT, COCKTAIL_3_INGREDIENT2));
-        cocktailEntity.setInstructions(COCKTAIL_2_INSTRUCTIONS);
+        cocktailEntity.setInstructions(COCKTAIL_3_INSTRUCTIONS);
 
         return cocktailEntity;
+    }
+
+    private MealEntity createMeal() {
+        MealEntity mealEntity = new MealEntity();
+        mealEntity.setId(MEAL_ID);
+        mealEntity.setIdMeal(MEAL_ID_MEAL);
+        mealEntity.setName(MEAL_NAME);
+        mealEntity.setImage(MEAL_IMAGE);
+        mealEntity.setInstructions(MEAL_INSTRUCTIONS);
+        mealEntity.setCategory(MEAL_CATEGORY);
+        mealEntity.setArea(MEAL_AREA);
+        mealEntity.setIngredients(Set.of(MEAL_INGREDIENT));
+        return mealEntity;
+    }
+
+    private MealEntity createMeal1() {
+        MealEntity mealEntity = new MealEntity();
+        mealEntity.setId(MEAL_ID_1);
+        mealEntity.setIdMeal(MEAL_ID_MEAL_1);
+        mealEntity.setName(MEAL_NAME_1);
+        mealEntity.setImage(MEAL_IMAGE_1);
+        mealEntity.setInstructions(MEAL_INSTRUCTIONS_1);
+        mealEntity.setCategory(MEAL_CATEGORY_1);
+        mealEntity.setArea(MEAL_AREA_1);
+        mealEntity.setIngredients(Set.of(MEAL_INGREDIENT_1));
+        return mealEntity;
     }
 }

@@ -22,7 +22,7 @@ public class Cocktail3Matcher extends BaseMatcher<Cocktail> {
         assertThat(cocktailEntity.getCocktailId(), equalTo(COCKTAIL_3_UUID));
         assertThat(cocktailEntity.getName(), equalTo(COCKTAIL_3_NAME));
         assertThat(cocktailEntity.getGlass(), equalTo(COCKTAIL_3_GLASS));
-        assertThat(cocktailEntity.getImage(), equalTo(COCKTAIL_3_IMAGE));
+        assertThat(cocktailEntity.getImage().toString(), equalTo(COCKTAIL_3_IMAGE));
         assertThat(cocktailEntity.getInstructions(), equalTo(COCKTAIL_3_INSTRUCTIONS));
         assertThat(cocktailEntity.getIngredients(), containsInAnyOrder(COCKTAIL_3_INGREDIENT, COCKTAIL_3_INGREDIENT2));
 

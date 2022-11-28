@@ -32,4 +32,21 @@ public class ShoppingListServiceTestConfiguration {
     public static final String COCKTAIL_3_INSTRUCTIONS = COCKTAIL_2_INSTRUCTIONS + SUFFIX_3;
     public static final String COCKTAIL_3_INGREDIENT = COCKTAIL_2_INGREDIENT + SUFFIX_3;
     public static final String COCKTAIL_3_INGREDIENT2 = COCKTAIL_2_INGREDIENT2 + SUFFIX_3;
+    public static final UUID MEAL_ID = UUID.fromString("e97e0d84-eca3-4829-a647-0d4d38a618d5");
+    public static final String MEAL_ID_MEAL = "1234";
+    public static final String MEAL_NAME = "meal name";
+    public static final String MEAL_IMAGE = "meal image";
+    public static final String MEAL_INSTRUCTIONS = "meal instruction";
+    public static final String MEAL_CATEGORY = "meal category";
+    public static final String MEAL_AREA = "meal area";
+    public static final String MEAL_INGREDIENT = "meal ingredient";
+    private static final String SUFFIX = "_1";
+    public static final UUID MEAL_ID_1 = UUID.fromString("e98e0d84-eca3-4829-a647-0d4d38a618d5");
+    public static final String MEAL_ID_MEAL_1 = "5678";
+    public static final String MEAL_NAME_1 = "meal name" + SUFFIX;
+    public static final String MEAL_IMAGE_1 = "meal image" + SUFFIX;
+    public static final String MEAL_INSTRUCTIONS_1 = "meal instruction" + SUFFIX;
+    public static final String MEAL_CATEGORY_1 = "meal category" + SUFFIX;
+    public static final String MEAL_AREA_1 = "meal area" + SUFFIX;
+    public static final String MEAL_INGREDIENT_1 = "meal ingredient" + SUFFIX;
 }

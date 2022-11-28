@@ -12,6 +12,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.ezgroceries.shopinglist.EzGroceriesShopingListApplication;
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
+import com.ezgroceries.shopinglist.meal.service.MealService;
 import com.ezgroceries.shopinglist.shoppinglist.service.ShoppingListsService;
 import config.TestConfig;
 import java.net.URI;
@@ -45,6 +46,8 @@ public class CocktailControllerTest {
     private CocktailService cocktailService;
     @MockBean
     private ShoppingListsService shoppingListsService;
+    @MockBean
+    private MealService mealService;
     @MockBean
     private Cocktail cocktail;
 
