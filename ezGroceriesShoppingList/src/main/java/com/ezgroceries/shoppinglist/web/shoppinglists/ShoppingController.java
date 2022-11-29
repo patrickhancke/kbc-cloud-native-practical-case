@@ -56,9 +56,9 @@ public class ShoppingController {
 
     @PostMapping(value = "/shopping-lists/{shoppingListId}/cocktails")
     public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") UUID listId, @RequestBody Cocktail cocktail) {
-
-        log.info("Add cocktail {} to shopping list {}", cocktail.getCocktailId(), listId);
-        shoppingListService.addCocktailToShoppingList(listId, cocktail);
+        UUID cocktailId = UUID.fromString(cocktail.getCocktailId());
+        log.info("Add cocktail {} to shopping list {}", cocktailId, listId);
+        shoppingListService.addCocktailToShoppingList(listId, cocktailId);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{resourceId}")

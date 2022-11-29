@@ -38,30 +38,43 @@ public class JpaCocktailService implements CocktailService {
         List<String> idDrinks = cocktailDBResponse.getDrinks()
                 .stream().map(CocktailDBResponse.DrinkResource::getIdDrink)
                 .collect(Collectors.toList());
-        List<String> idDrinksNotInDb = idDrinks.stream()
-                .filter(id -> cocktailRepository.findCocktailsByCocktailId(id).isEmpty())
-                .collect(Collectors.toList());
+        //Check all cocktails in the database and map to key idDrink
+        Map<String, Optional<Cocktail>> cocktailsDb = idDrinks.stream()
+                .collect(Collectors.toMap(
+                        id -> id,
+                        id -> cocktailRepository.findCocktailsByCocktailId(id).stream().findFirst() //only taking the first cocktail in consideration
+                ));
+        //Save any cocktails not yet in database
+        int existing=0, newones=0;
+        for(var entry : cocktailsDb.entrySet()){ //or fancier stream and saveAll
+            if (entry.getValue().isEmpty()){
+                Cocktail newcocktail = new Cocktail(entry.getKey(), null, null);
+                entry.setValue(Optional.of(cocktailRepository.save(newcocktail)));
+                newones++;
+            }
+            else {
+                existing++;
+            }
+        }
 
         log.info("idDrinks returned by api {}", idDrinks.size());
-        log.info("idDrinks already in the DB {}", cocktailRepository.findAll().size());
-        log.info("idDrinks to persist in DB {}", idDrinksNotInDb.size());
-        List<Cocktail> cocktailsToPersist = idDrinksNotInDb
-                .stream().map(id -> new Cocktail(id, null, null))
-                .collect(Collectors.toList());
-        cocktailRepository.saveAll(cocktailsToPersist);
+        log.info("idDrinks already in the DB {}", existing);
+        log.info("idDrinks persisted in DB {}", newones);
 
-        return getCocktailsFromCocktailDBResponse(cocktailDBResponse);
+        return getCocktailsFromCocktailDBResponse(cocktailDBResponse, cocktailsDb);
     }
 
-    private List<Cocktail> getCocktailsFromCocktailDBResponse(CocktailDBResponse cocktailDBResponse) {
+    private List<Cocktail> getCocktailsFromCocktailDBResponse(CocktailDBResponse cocktailDBResponse, Map<String, Optional<Cocktail>> cocktailsDb) {
         log.info("Converting DBResponse to Cocktails");
         List<Cocktail> cocktails = new ArrayList<>();
         for (CocktailDBResponse.DrinkResource drink : cocktailDBResponse.getDrinks()) {
             log.info("new cocktail");
-            Cocktail cocktail = new Cocktail();
+            Optional<Cocktail> db = cocktailsDb.get(drink.getIdDrink());
+            Cocktail cocktail = db.orElseGet(Cocktail::new);
             cocktail.setCocktailId(drink.getIdDrink());
             cocktail.setName(drink.getStrDrink());
             cocktail.setIngredients(new HashSet<>(List.of(drink.getStrIngredients())));
+            cocktail.setGlass(drink.getStrGlass());
             cocktails.add(cocktail);
         }
         return cocktails;

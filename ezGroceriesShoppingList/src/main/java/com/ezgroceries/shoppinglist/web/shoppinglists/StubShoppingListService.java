@@ -1,6 +1,5 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
-import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
@@ -47,7 +46,8 @@ public class StubShoppingListService implements ShoppingListService {
     }
 
     @Override
-    public void addCocktailToShoppingList(UUID listId, Cocktail cocktail) {
+    public boolean addCocktailToShoppingList(UUID listId, UUID cocktailId) {
         log.info("doing nothing really..");
+        return true;
     }
 }

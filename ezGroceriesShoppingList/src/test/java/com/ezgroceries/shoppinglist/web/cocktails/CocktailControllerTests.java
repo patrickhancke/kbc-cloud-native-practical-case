@@ -45,14 +45,14 @@ public class CocktailControllerTests {
     }
 
     @MockBean
-    private CocktailService cocktailManager; //old mockbean
+    private CocktailService cocktailService; //old mockbean
     //@MockBean CocktailDBClient cocktailDBClient;
 
 
     @Test
     public void getAllCocktails() throws Exception{
 
-        given(cocktailManager.searchCocktail("Russian")).willReturn(List.of(margerita));
+        given(cocktailService.searchCocktail("Russian")).willReturn(List.of(margerita));
         //given(cocktailDBClient.searchCocktails("Russian")).willReturn(margeritaDbResp);
 
         mockMvc.perform(get("/cocktails").param("search","Russian"))
@@ -62,7 +62,7 @@ public class CocktailControllerTests {
                 .andExpect(jsonPath("$[0].glass").value("Cocktail glass"))
                 .andExpect(jsonPath("$[0].name").value("Margerita"));
 
-        verify(cocktailManager).searchCocktail("Russian");
+        verify(cocktailService).searchCocktail("Russian");
         //verify(cocktailDBClient).searchCocktails("Russian");
     }
 

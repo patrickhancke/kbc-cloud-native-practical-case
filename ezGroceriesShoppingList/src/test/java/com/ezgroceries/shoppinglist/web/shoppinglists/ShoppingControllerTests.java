@@ -121,13 +121,12 @@ public class ShoppingControllerTests {
         String json = objectMapper.writeValueAsString(margerita);
         log.info("json made: {}", json);
 
-        mockMvc.perform(post("/shopping-lists/"+dummyListId+"/cocktails")
+        mockMvc.perform(post("/shopping-lists/" + dummyListId + "/cocktails")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isCreated())
-                .andExpect(header().string("Location", URLPREFIX + "/shopping-lists/"+dummyListId+"/cocktails/"+margerita.getCocktailId()))
+                .andExpect(header().string("Location", URLPREFIX + "/shopping-lists/" + dummyListId + "/cocktails/" + margerita.getCocktailId()))
                 .andReturn();
     }
-
 }
 

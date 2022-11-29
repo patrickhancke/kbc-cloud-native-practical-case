@@ -1,6 +1,9 @@
 package com.ezgroceries.shoppinglist.web.shoppinglists;
 
+import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
+
 import javax.persistence.*;
+import java.util.Set;
 import java.util.UUID;
 
 @Entity
@@ -14,6 +17,13 @@ public class ShoppingList {
 
     @Column(name="name")
     String name;
+
+    @ManyToMany
+    @JoinTable(
+            name = "COCKTAIL_SHOPPING_LIST",
+            joinColumns = @JoinColumn(name = "SHOPPING_LIST_ID"),
+            inverseJoinColumns = @JoinColumn(name = "COCKTAIL_ID"))
+    Set<Cocktail> cocktails;
 
     public ShoppingList(){
     }
@@ -42,5 +52,13 @@ public class ShoppingList {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Set<Cocktail> getCocktails() {
+        return cocktails;
+    }
+
+    public void setCocktails(Set<Cocktail> cocktails) {
+        this.cocktails = cocktails;
     }
 }
