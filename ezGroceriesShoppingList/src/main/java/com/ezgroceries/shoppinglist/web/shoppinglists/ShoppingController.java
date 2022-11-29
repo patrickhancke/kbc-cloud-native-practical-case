@@ -10,28 +10,31 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Map;
+import java.util.UUID;
 
 @RestController
 public class ShoppingController {
     private static final Logger log = LoggerFactory.getLogger(ShoppingController.class);
-    private final ShoppingListManager shoppingListManager;
 
-    public ShoppingController(ShoppingListManager shoppingListManager){
-        this.shoppingListManager = shoppingListManager;
+    private final ShoppingListService shoppingListService;
+
+    public ShoppingController(ShoppingListService shoppingListService){
+        log.info("Create shoppingcontroller!");
+        this.shoppingListService = shoppingListService;
     }
 
     @GetMapping(value="/shopping-lists/{shoppingListId}")
-    public ResponseEntity<ShoppingList> getShoppingList(@PathVariable(name="shoppingListId") String listId){
+    public ResponseEntity<ShoppingList> getShoppingList(@PathVariable(name="shoppingListId") UUID listId){
         log.info("Getting shopping list {}", listId);
-        ShoppingList found = shoppingListManager.getShoppingList(listId);
-        return ResponseEntity.ok().body(found);
-    } //TODO now always returning OK, also set 'not found' logic
+        return shoppingListService.getShoppingList(listId)
+                .map(ResponseEntity::ok)                                //200 OK (found -> ResponseEntity.ok().body(found))
+                .orElseGet( () ->  ResponseEntity.notFound().build());  //404 Not found
+    }
 
     @GetMapping(value="/shopping-lists")
     public ResponseEntity<List<ShoppingList>> getAllShoppingLists(){
         log.info("Getting all shopping lists");
-        List<ShoppingList> results = shoppingListManager.getAllShoppingLists();
+        List<ShoppingList> results = shoppingListService.getAllShoppingLists();
         return ResponseEntity.ok().body(results);
     }
 
@@ -40,7 +43,7 @@ public class ShoppingController {
 
         String name = shoppingList.getName();
         log.info("create shopping list for {}", name);
-        String listId = shoppingListManager.createShoppingList(name);
+        UUID listId = shoppingListService.createShoppingList(name);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{resourceId}")
@@ -52,10 +55,10 @@ public class ShoppingController {
 
 
     @PostMapping(value = "/shopping-lists/{shoppingListId}/cocktails")
-    public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") String listId, @RequestBody Cocktail cocktail) {
-
-        log.info("Add cocktail {} to shopping list {}", cocktail.getCocktailId(), listId);
-        shoppingListManager.addCocktailToShoppingList(listId, cocktail);
+    public ResponseEntity<Void> addCocktailToList(@PathVariable(name="shoppingListId") UUID listId, @RequestBody Cocktail cocktail) {
+        UUID cocktailId = UUID.fromString(cocktail.getCocktailId());
+        log.info("Add cocktail {} to shopping list {}", cocktailId, listId);
+        shoppingListService.addCocktailToShoppingList(listId, cocktailId);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequestUri()
                 .path("/{resourceId}")
