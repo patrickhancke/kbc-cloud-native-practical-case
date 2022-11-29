@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface CocktailRepository extends JpaRepository<Cocktail, UUID> {
 
     List<Cocktail> findCocktailsByCocktailId(String idDrink);
+
+    List<Cocktail> findByNameContainingIgnoreCase(String search);
 }

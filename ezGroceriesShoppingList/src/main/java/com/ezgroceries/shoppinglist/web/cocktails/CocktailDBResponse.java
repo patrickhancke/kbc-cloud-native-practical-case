@@ -2,6 +2,7 @@ package com.ezgroceries.shoppinglist.web.cocktails;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class CocktailDBResponse {
 
@@ -143,6 +144,27 @@ public class CocktailDBResponse {
 
         public String getStrDrinkThumb() {
             return strDrinkThumb;
+        }
+
+
+        public void setStrIngredients(Set<String> ingredients){
+            String[] ing = ingredients.toArray(String[]::new);
+            if (ing.length > 0)
+                setStrIngredient1(ing[0]);
+            if (ing.length > 1)
+                setStrIngredient1(ing[1]);
+            if (ing.length > 2)
+                setStrIngredient1(ing[2]);
+            if (ing.length > 3)
+                setStrIngredient1(ing[3]);
+            if (ing.length > 4)
+                setStrIngredient1(ing[4]);
+            if (ing.length > 5)
+                setStrIngredient1(ing[5]);
+            if (ing.length > 6)
+                setStrIngredient1(ing[6]);
+            if (ing.length > 7)
+                setStrIngredient1(ing[7]);
         }
 
         public String[] getStrIngredients(){
