@@ -28,13 +28,11 @@ public class Cocktail {
 
 
     //For now don't persist these
-    @Transient
     String instructions;
 
-    @Transient
+    @Column(name="image_link")
     String image;
 
-    @Transient
     String glass;
 
 
@@ -52,6 +50,8 @@ public class Cocktail {
         this.cocktailId = cocktailId;
         this.name = name;
         this.glass = glass;
+        this.instructions = instructions;
+        this.image = image;
         this.ingredients = ingredients;
     }
 
@@ -94,5 +94,21 @@ public class Cocktail {
 
     public void setGlass(String glass) {
         this.glass = glass;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
