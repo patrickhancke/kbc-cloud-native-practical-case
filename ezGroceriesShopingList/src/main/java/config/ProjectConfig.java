@@ -7,17 +7,17 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class ProjectConfig extends WebSecurityConfigurerAdapter {
+public class ProjectConfig {
     private final DataSource dataSource;
 
     public ProjectConfig(DataSource dataSource) {
@@ -33,17 +33,17 @@ public class ProjectConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordEncoder() {
         return new Argon2PasswordEncoder();
     }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        return http.authorizeRequests()
                 .mvcMatchers(HttpMethod.GET, "/cocktails/**").permitAll()
                 .mvcMatchers(HttpMethod.GET, "/shopping-lists/**").hasAnyRole("USER", "ADMIN", "ROLE_USER")
                 .mvcMatchers(HttpMethod.POST, "/shopping-lists/**").hasAnyRole("USER", "ADMIN", "ROLE_USER")
                 .mvcMatchers(HttpMethod.GET, "/meals/**").permitAll()
-                .mvcMatchers("/**").authenticated();
-        http.httpBasic();
-        http.csrf().disable();
+                .mvcMatchers("/**").authenticated()
+                .and().httpBasic()
+                .and().csrf().disable()
+                .build();
     }
 
     @Bean(name = "mvcHandlerMappingIntrospector")
