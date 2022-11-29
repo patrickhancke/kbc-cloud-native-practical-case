@@ -15,7 +15,6 @@ public interface CocktailDBClient {
     @GetMapping(value = "search.php")
     CocktailDBResponse searchCocktails(@RequestParam("s") String search);
 
-
     @Component
     static class CocktailDBClientFallback implements CocktailDBClient {
 
