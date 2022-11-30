@@ -30,17 +30,27 @@ public class JpaShoppingListService implements ShoppingListService {
     }
 
     public List<ShoppingList> getAllShoppingLists() {
-
-        List<ShoppingList> entities = shoppingListRepository.findAll();
-        log.info("Shoppinglists entities found by service {}", entities.size());
-
-        return entities;
+        List<ShoppingList> allLists = shoppingListRepository.findAll();
+        log.info("Shoppinglists entities found by service {}", allLists.size());
+        allLists.forEach(li -> addIngredientsToList(li));
+        return allLists;
     }
 
     @Override
     public Optional<ShoppingList> getShoppingList(UUID id) {
         Optional<ShoppingList> shoppingList = shoppingListRepository.findById(id);
+        if (shoppingList.isPresent()){
+            addIngredientsToList(shoppingList.get());
+        }
         return shoppingList;
+    }
+
+    private void addIngredientsToList(ShoppingList shoppingList){
+        if (shoppingList!=null && shoppingList.getCocktails()!=null){
+            for(Cocktail co : shoppingList.getCocktails()){
+                shoppingList.getIngredients().addAll(co.getIngredients());
+            }
+        }
     }
 
     @Override

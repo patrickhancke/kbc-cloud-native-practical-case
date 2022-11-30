@@ -16,12 +16,10 @@ public class StubShoppingListService implements ShoppingListService {
     private static final Logger log = LoggerFactory.getLogger(StubShoppingListService.class);
 
     private final ShoppingList stephanieDummyShoppingList = new ShoppingList(UUID.randomUUID(),
-            "Stephanie's birthday",
-            new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
+            "Stephanie's birthday");
 
     private final ShoppingList myDummyShoppingList = new ShoppingList(UUID.randomUUID(),
-            "My birthday",
-            new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
+            "My birthday");
 
     private final UUID dummyListId = UUID.randomUUID();
 

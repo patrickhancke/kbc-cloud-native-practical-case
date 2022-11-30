@@ -32,12 +32,10 @@ public class ShoppingControllerTests {
     private static final Logger log = LoggerFactory.getLogger(ShoppingControllerTests.class);
 
     private final ShoppingList stephanieDummyShoppingList = new ShoppingList(UUID.randomUUID(),
-            "Stephanie's birthday",
-            new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"});
+            "Stephanie's birthday");
 
     private final ShoppingList myDummyShoppingList = new ShoppingList(UUID.randomUUID(),
             "My birthday"
-            , new String[]{"Tequila", "Triple sec", "Lime juice", "Salt", "Blue Curacao"}
     );
 
     private final Set<String> stubIngredients = new HashSet<>(Arrays.asList("Tequila", "Triple sec", "Lime juice", "Salt"));

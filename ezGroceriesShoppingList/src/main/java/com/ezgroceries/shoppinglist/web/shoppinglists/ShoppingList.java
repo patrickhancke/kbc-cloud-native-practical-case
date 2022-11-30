@@ -3,6 +3,7 @@ package com.ezgroceries.shoppinglist.web.shoppinglists;
 import com.ezgroceries.shoppinglist.web.cocktails.Cocktail;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
 
@@ -25,17 +26,16 @@ public class ShoppingList {
             inverseJoinColumns = @JoinColumn(name = "COCKTAIL_ID"))
     Set<Cocktail> cocktails;
 
+    @Transient
+    Set<String> ingredients = new HashSet<>();
+
     public ShoppingList(){
     }
 
     public ShoppingList(UUID id, String name){
         this.id = id;
         this.name = name;
-    }
-
-    public ShoppingList(UUID id, String name, String[] ingredients){
-        this.id = id;
-        this.name = name;
+        this.cocktails = new HashSet<>();
     }
 
     public UUID getId() {
@@ -60,5 +60,13 @@ public class ShoppingList {
 
     public void setCocktails(Set<Cocktail> cocktails) {
         this.cocktails = cocktails;
+    }
+
+    public Set<String> getIngredients() {
+        return ingredients;
+    }
+
+    public void setIngredients(Set<String> ingredients) {
+        this.ingredients = ingredients;
     }
 }
