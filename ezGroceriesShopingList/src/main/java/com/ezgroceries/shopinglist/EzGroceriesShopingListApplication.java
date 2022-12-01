@@ -1,5 +1,8 @@
 package com.ezgroceries.shopinglist;
 
+import config.KafkaConsumerConfig;
+import config.KafkaProducerConfig;
+import config.KafkaTopicConfig;
 import config.ProjectConfig;
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,7 +16,10 @@ import org.springframework.context.annotation.Import;
 
 @EnableFeignClients
 @SpringBootApplication
-@Import({ProjectConfig.class})
+@Import({ProjectConfig.class,
+        KafkaTopicConfig.class,
+        KafkaProducerConfig.class,
+        KafkaConsumerConfig.class})
 public class EzGroceriesShopingListApplication {
 
     public static void main(String[] args) {

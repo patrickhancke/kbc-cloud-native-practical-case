@@ -15,17 +15,25 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.kafka.core.KafkaTemplate;
+import org.springframework.kafka.support.SendResult;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Service
 public class CocktailService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CocktailService.class);
     private final CocktailRepository cocktailRepository;
     private final CocktailDBClient client;
+    private final KafkaTemplate<String, CocktailEntity> kafkaTemplate;
 
-    public CocktailService(CocktailRepository cocktailRepository, CocktailDBClient client) {
+    public CocktailService(CocktailRepository cocktailRepository,
+            CocktailDBClient client,
+            KafkaTemplate<String, CocktailEntity> kafkaTemplate) {
         this.cocktailRepository = cocktailRepository;
         this.client = client;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     public CocktailEntity getCocktailEntity(UUID cocktailId) {
@@ -59,9 +67,28 @@ public class CocktailService {
 
     private Collection<CocktailEntity> populateCocktailTable(Collection<DrinkResource> source) {
         List<CocktailEntity> entities = source.stream().map(CocktailFactory::createCocktail).collect(Collectors.toList());
-        Collection<CocktailEntity> cocktailEntities = (Collection<CocktailEntity>) cocktailRepository.saveAll(entities);
-        LOGGER.debug("cocktail table populated with {}", cocktailEntities.size());
+//        Collection<CocktailEntity> cocktailEntities = (Collection<CocktailEntity>) cocktailRepository.saveAll(entities);
+        entities.forEach(this::sendMessage);
+        return entities;
+    }
 
-        return cocktailEntities;
+    public void sendMessage(CocktailEntity cocktailEntities) {
+
+        ListenableFuture<SendResult<String, CocktailEntity>> future =
+                kafkaTemplate.send("quickstart-events", cocktailEntities);
+
+        future.addCallback(new ListenableFutureCallback<>() {
+
+            @Override
+            public void onSuccess(SendResult<String, CocktailEntity> result) {
+                LOGGER.debug("Sent message=[" + cocktailEntities +
+                        "] with offset=[" + result.getRecordMetadata().offset() + "]");
+            }
+            @Override
+            public void onFailure(Throwable ex) {
+                LOGGER.debug("Unable to send message=["
+                        + cocktailEntities + "] due to : " + ex.getMessage());
+            }
+        });
     }
 }
