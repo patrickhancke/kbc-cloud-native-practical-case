@@ -48,11 +48,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.BDDMockito.given;
 
+import com.ezgroceries.shopinglist.cocktail.AddCocktailListener;
 import com.ezgroceries.shopinglist.cocktail.Cocktail;
 import com.ezgroceries.shopinglist.cocktail.Cocktail1Matcher;
 import com.ezgroceries.shopinglist.cocktail.Cocktail2Matcher;
 import com.ezgroceries.shopinglist.cocktail.Cocktail3Matcher;
 import com.ezgroceries.shopinglist.cocktail.persistence.CocktailEntity;
+import com.ezgroceries.shopinglist.cocktail.persistence.CocktailRepository;
 import com.ezgroceries.shopinglist.cocktail.service.CocktailService;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesBadRequestException;
 import com.ezgroceries.shopinglist.exceptionhandling.EzGroceriesNotFoundException;
@@ -85,6 +87,8 @@ public class ShoppingListServiceTest {
     private CocktailService cocktailService;
     @Autowired
     private MealRepository mealRepository;
+    @Autowired
+    private CocktailRepository cocktailRepository;
     @Autowired
     private ShoppingListRepository shoppingListRepository;
     private ShoppingListsService shoppingListsService;
@@ -152,6 +156,22 @@ public class ShoppingListServiceTest {
         List<Meal> meals = shoppingList.getMeals();
         meals.sort(Comparator.comparing(Meal::getName));
         assertThat(meals, hasItem(new MealMatcher()));
+    }
+
+    @Test
+    void testCocktailListener() {
+        AddCocktailListener addCocktailListener = new AddCocktailListener(cocktailRepository);
+        CocktailEntity cocktail3 = createCocktail3();
+        addCocktailListener.foundMissingCocktails(cocktail3);
+
+        CocktailEntity byName = cocktailRepository.findByName(cocktail3.getName());
+
+        assertThat(byName.getIdDrink(), equalTo(cocktail3.getIdDrink()));
+        assertThat(byName.getId(), equalTo(cocktail3.getId()));
+        assertThat(byName.getGlass(), equalTo(cocktail3.getGlass()));
+        assertThat(byName.getImage(), equalTo(cocktail3.getImage()));
+        assertThat(byName.getInstructions(), equalTo(cocktail3.getInstructions()));
+        assertThat(byName.getIngredients(), containsInAnyOrder(COCKTAIL_3_INGREDIENT, COCKTAIL_3_INGREDIENT2));
     }
 
     @Test

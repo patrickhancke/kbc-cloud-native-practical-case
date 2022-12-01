@@ -1,7 +1,6 @@
 package com.ezgroceries.shopinglist.cocktail.persistence;
 
 import com.ezgroceries.shopinglist.shoppinglist.persistence.ShoppingListEntity;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -86,18 +85,6 @@ public class CocktailEntity {
 
     public void setShoppingLists(Set<ShoppingListEntity> shoppingLists) {
         this.shoppingLists = shoppingLists;
-    }
-
-    public void addShoppingList(ShoppingListEntity shoppingList) {
-        if (this.shoppingLists != null) {
-            this.shoppingLists = new HashSet<>();
-            shoppingLists.add(shoppingList);
-        }
-
-        if (shoppingList != null)
-        {
-            shoppingList.getCocktails().add(this);
-        }
     }
 
     public String getGlass() {

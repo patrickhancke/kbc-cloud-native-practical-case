@@ -2,12 +2,14 @@ package com.ezgroceries.shopinglist.meal.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.ezgroceries.shopinglist.meal.persistence.MealEntity;
 import com.ezgroceries.shopinglist.meal.persistence.MealRepository;
+import com.ezgroceries.shopinglist.meal.service.MealClient.MealClientFallback;
 import com.ezgroceries.shopinglist.meal.service.MealResponse.MealResource;
 import com.ezgroceries.shopinglist.meal.web.Meal;
 import java.util.Collection;
@@ -25,13 +27,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 public class MealServiceTest {
     private static final UUID MEAL_ID = UUID.fromString("08410f17-8a48-4d06-a336-c4513cc86afe");
     private static final UUID MEAL_ID_1 = UUID.fromString("261abccf-7ba9-4706-a7ed-914b5deb04be");
-    private static final String SUFFIX = "_1";
-    private static final String MEAL_NAME = "meal name";
-    private static final String MEAL_IMAGE = "meal image";
-    private static final String MEAL_INSTRUCTIONS = "meal instructions";
-    private static final String MEAL_CATEGORY = "meal category";
-    private static final String MEAL_AREA = "meal area";
-    private static final String MEAL_INGREDIENT = "meal ingredient";
+    public static final String SUFFIX = "_1";
+    public static final String MEAL_NAME = "meal name";
+    public static final String MEAL_IMAGE = "meal image";
+    public static final String MEAL_INSTRUCTIONS = "meal instructions";
+    public static final String MEAL_CATEGORY = "meal category";
+    public static final String MEAL_AREA = "meal area";
+    public static final String MEAL_INGREDIENT = "meal ingredient";
     @MockBean
     private MealClient mealClient;
     @Autowired
@@ -52,6 +54,16 @@ public class MealServiceTest {
 
         assertThat(search, notNullValue());
         assertThat(search.size(), equalTo(3));
+    }
+
+    @Test
+    void testSearchMealFallback() {
+        MealClientFallback mealClientFallback = new MealClientFallback(mealRepository);
+        MealResponse searchMeal = mealClientFallback.searchMeal("mEAl nAme");
+
+        Collection<MealResource> meals = searchMeal.getMeals();
+        assertThat(meals.size(), equalTo(2));
+        assertThat(meals, hasItems(new MealResponseMatcher()));
     }
 
     private void init() {

@@ -16,19 +16,13 @@ public class MealResponse {
     public static class MealResource {
         private String idMeal;
         private String strMeal;
-        private String strDrinkAlternate;
         private String strCategory;
         private String strArea;
         private String strInstructions;
         private String strMealThumb;
-        private String strTags;
-        private String strYoutube;
         private String strIngredient1;
         private String strIngredient2;
         private String strIngredient3;
-        private String strMeasure1;
-        private String strMeasure2;
-        private String strMeasure3;
 
         public String getIdMeal() {
             return idMeal;
@@ -44,14 +38,6 @@ public class MealResponse {
 
         public void setStrMeal(String strMeal) {
             this.strMeal = strMeal;
-        }
-
-        public String getStrDrinkAlternate() {
-            return strDrinkAlternate;
-        }
-
-        public void setStrDrinkAlternate(String strDrinkAlternate) {
-            this.strDrinkAlternate = strDrinkAlternate;
         }
 
         public String getStrCategory() {
@@ -86,22 +72,6 @@ public class MealResponse {
             this.strMealThumb = strMealThumb;
         }
 
-        public String getStrTags() {
-            return strTags;
-        }
-
-        public void setStrTags(String strTags) {
-            this.strTags = strTags;
-        }
-
-        public String getStrYoutube() {
-            return strYoutube;
-        }
-
-        public void setStrYoutube(String strYoutube) {
-            this.strYoutube = strYoutube;
-        }
-
         public String getStrIngredient1() {
             return strIngredient1;
         }
@@ -124,30 +94,6 @@ public class MealResponse {
 
         public void setStrIngredient3(String strIngredient3) {
             this.strIngredient3 = strIngredient3;
-        }
-
-        public String getStrMeasure1() {
-            return strMeasure1;
-        }
-
-        public void setStrMeasure1(String strMeasure1) {
-            this.strMeasure1 = strMeasure1;
-        }
-
-        public String getStrMeasure2() {
-            return strMeasure2;
-        }
-
-        public void setStrMeasure2(String strMeasure2) {
-            this.strMeasure2 = strMeasure2;
-        }
-
-        public String getStrMeasure3() {
-            return strMeasure3;
-        }
-
-        public void setStrMeasure3(String strMeasure3) {
-            this.strMeasure3 = strMeasure3;
         }
     }
 }
