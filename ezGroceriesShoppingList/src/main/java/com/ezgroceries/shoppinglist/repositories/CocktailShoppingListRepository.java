@@ -11,4 +11,5 @@ public interface CocktailShoppingListRepository extends Repository<CocktailShopp
     public CocktailShoppingListEntity save(CocktailShoppingListEntity cocktailShoppingList);
     public CocktailShoppingListEntity findByid(UUID CocktailListId);
     public List<CocktailShoppingListEntity> findByshoppingListId(UUID ShoppingListId);
+    public List<CocktailShoppingListEntity> findAll();
 }

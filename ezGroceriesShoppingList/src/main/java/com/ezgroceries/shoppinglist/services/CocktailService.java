@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Convert;
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -87,17 +88,22 @@ public class CocktailService {
     }
 
     public List<CocktailResource> getCocktailList(List<UUID> ids){
-        List<CocktailResource> result = new ArrayList<>();
 
         logger.info(String.valueOf(ids));
-        Map<String, CocktailEntity>  existingEntityMap= (cocktailRepository.findByIdIn(ids))
+        Map<String, CocktailEntity>  EntityMap= (cocktailRepository.findByIdIn(ids))
                 .stream()
                 .collect(Collectors.toMap(CocktailEntity::getIdDrink, o->o,(o, o2)->o));
 
-     //   logger.info(String.valueOf(existingEntityMap));
+        logger.info(String.valueOf(EntityMap));
 
-        return result;
+        List<CocktailResource> cocktails = new ArrayList<>();
+
+       EntityMap.entrySet().forEach((entry) -> cocktails.add(new CocktailResource(String.valueOf(entry.getValue().getCocktailId()),entry.getValue().getIdDrink(),entry.getValue().getName())));
+        logger.info(String.valueOf(cocktails));
+        return cocktails;
+
     }
+
 
     public List<CocktailResource> getAllCocktails(){
 

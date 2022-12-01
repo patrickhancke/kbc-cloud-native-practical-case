@@ -23,6 +23,12 @@ public class CocktailResource {
         this.ingredients = ingredients;
     }
 
+    public CocktailResource(String cocktailId, String idDrink, String name) {
+        this.cocktailId = cocktailId;
+        this.idDrink = idDrink;
+        this.name = name;
+    }
+
     public CocktailResource() {
 
     }

@@ -1,5 +1,6 @@
 package com.ezgroceries.shoppinglist.controllers;
 
+import com.ezgroceries.shoppinglist.entities.CocktailResource;
 import com.ezgroceries.shoppinglist.entities.ShoppingListEntity;
 import com.ezgroceries.shoppinglist.services.ShoppingListService;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class ShoppingListController {
     }
 
    @GetMapping(value="/shopping-lists")
-    public List<ShoppingListEntity> shoppingSummary(){
+    public List<CocktailResource> shoppingSummary(){
         logger.info("get all shopping lists");
         return shoppingListService.getAllShoppingLists();
 
@@ -44,8 +45,8 @@ public class ShoppingListController {
 
 
    @GetMapping(value="/shopping-lists/{shoppingListId}")
-    public void shoppingSummary(@PathVariable UUID shoppingListId){
+    public List<CocktailResource> shoppingSummary(@PathVariable UUID shoppingListId){
         logger.info(String.valueOf(shoppingListId));
-        shoppingListService.getShoppingList(shoppingListId);
+       return shoppingListService.getShoppingList(shoppingListId);
     }
 }

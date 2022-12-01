@@ -1,5 +1,6 @@
 package com.ezgroceries.shoppinglist.services;
 
+import com.ezgroceries.shoppinglist.entities.CocktailResource;
 import com.ezgroceries.shoppinglist.entities.CocktailShoppingListEntity;
 import com.ezgroceries.shoppinglist.entities.ShoppingListEntity;
 import com.ezgroceries.shoppinglist.repositories.CocktailShoppingListRepository;
@@ -18,13 +19,15 @@ public class ShoppingListService {
 
     private ShoppingListRepository shoppingListRepository;
     private CocktailShoppingListRepository cocktailShoppingListRepository;
+    private CocktailService cocktailService;
 
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public ShoppingListService(ShoppingListRepository shoppingListRepository, CocktailShoppingListRepository cocktailShoppingListRepository) {
+    public ShoppingListService(ShoppingListRepository shoppingListRepository, CocktailShoppingListRepository cocktailShoppingListRepository, CocktailService cocktailService) {
         this.shoppingListRepository = shoppingListRepository;
         this.cocktailShoppingListRepository = cocktailShoppingListRepository;
+        this.cocktailService = cocktailService;
     }
 
 
@@ -48,7 +51,7 @@ public class ShoppingListService {
         cocktailShoppingListRepository.save(newCocktailShoppingListEntity);
     }
 
-    public void getShoppingList(UUID shoppingListId) {
+    public List<CocktailResource> getShoppingList(UUID shoppingListId) {
        List<CocktailShoppingListEntity> newCocktailShoppingListEntity= cocktailShoppingListRepository.findByshoppingListId(shoppingListId);
         CocktailShoppingListEntity test = new CocktailShoppingListEntity();
 
@@ -59,17 +62,28 @@ public class ShoppingListService {
 
         logger.info("ids = " + ids);
 
-    //    List<CocktailResource> cocktails = cocktailService.getCocktailList(ids);
-     //   logger.info("cocktails = " + cocktails);
+        List<CocktailResource> cocktails = cocktailService.getCocktailList(ids);
+        logger.info("cocktails = " + cocktails);
+        return cocktails;
 
 
     }
 
-    public List<ShoppingListEntity> getAllShoppingLists(){
+    public List<CocktailResource> getAllShoppingLists(){
 
-        List<ShoppingListEntity> result = new ArrayList<>();
+        List<CocktailShoppingListEntity> newCocktailShoppingListEntity= cocktailShoppingListRepository.findAll();
+        CocktailShoppingListEntity test = new CocktailShoppingListEntity();
 
-        return result;
+        List<UUID> ids= newCocktailShoppingListEntity
+                .stream()
+                .map(CocktailShoppingListEntity::getId)
+                .collect(Collectors.toList());
+
+        logger.info("ids = " + ids);
+
+        List<CocktailResource> cocktails = cocktailService.getCocktailList(ids);
+        logger.info("cocktails = " + cocktails);
+        return cocktails;
     }
 
 
