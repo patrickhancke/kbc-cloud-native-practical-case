@@ -1,32 +1,31 @@
 package com.ezgroceries.shoppinglist.controllers;
 
-import com.ezgroceries.shoppinglist.classes.Cocktail;
+import com.ezgroceries.shoppinglist.entities.CocktailResource;
+import com.ezgroceries.shoppinglist.services.CocktailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import com.ezgroceries.shoppinglist.managers.CocktailManager;
+
 import java.util.List;
 
 @RestController
 public class CocktailController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final CocktailManager cocktailManager;
+    private CocktailService cocktailService;
 
-    @Autowired
-    public CocktailController(CocktailManager cocktailManager) {
-        this.cocktailManager = cocktailManager;
+    public CocktailController(CocktailService cocktailService) {
+        this.cocktailService = cocktailService;
     }
 
-   @GetMapping(value="/cocktails")
-    public List<Cocktail> cocktailSummary(@RequestParam(required = false) String search) {
+    @GetMapping(value="/cocktails")
+    public List<CocktailResource> cocktailSummary(@RequestParam(required = false) String search) {
        logger.info(search);
        if (search != null) {
-           return cocktailManager.getCocktails(search);
+           return cocktailService.getCocktails(search);
 
        } else {
-           return cocktailManager.getAllCocktails();
+           return cocktailService.getAllCocktails();
        }
 
    }

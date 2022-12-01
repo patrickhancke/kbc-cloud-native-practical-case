@@ -1,46 +1,51 @@
 package com.ezgroceries.shoppinglist.controllers;
 
-import com.ezgroceries.shoppinglist.classes.ShoppingList;
-import com.ezgroceries.shoppinglist.managers.ShoppingListManager;
+import com.ezgroceries.shoppinglist.entities.ShoppingListEntity;
+import com.ezgroceries.shoppinglist.services.ShoppingListService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 public class ShoppingListController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final ShoppingListManager shoppingListManager;
+    private final ShoppingListService shoppingListService;
 
-    @Autowired
-    public ShoppingListController(ShoppingListManager shoppingListManager) {this.shoppingListManager = shoppingListManager;
+   // @Autowired
+    public ShoppingListController(ShoppingListService shoppingListService) {
+        this.shoppingListService = shoppingListService;
     }
 
     @PostMapping(value="/shopping-lists")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createShoppingList(@RequestBody String newShoppingList){
-        logger.info("create shopping list: " + newShoppingList);
+    public String createShoppingList(@RequestParam(required = false) String name){
+        logger.info("create shopping list: " + name);
+        return shoppingListService.createShoppingList(name);
     }
 
     @PostMapping(value="/shopping-lists/{shoppingListId}/cocktails")
     @ResponseStatus(HttpStatus.CREATED)
-    public void addCocktail(@PathVariable String shoppingListId, @RequestBody String CocktailId){
-        logger.info("add cocktail to shopping list.  ShoppingListId = " + shoppingListId + ". CockailId = " + CocktailId);
+    public void addCocktail(@PathVariable UUID shoppingListId, @RequestParam(required = false) UUID cocktailId){
+        logger.info("add cocktail to shopping list.  ShoppingListId = " + shoppingListId + ". CockailId = " + cocktailId);
+        shoppingListService.addCocktailToList(shoppingListId,cocktailId);
     }
 
    @GetMapping(value="/shopping-lists")
-    public List<ShoppingList> shoppingSummary(){
+    public List<ShoppingListEntity> shoppingSummary(){
         logger.info("get all shopping lists");
-        return shoppingListManager.getAllShoppingLists();
+        return shoppingListService.getAllShoppingLists();
+
     }
 
 
-    @GetMapping(value="/shopping-lists/{shoppingListId}")
-    public List<ShoppingList> shoppingSummary(@PathVariable String shoppingListId){
-        logger.info(shoppingListId);
-        return shoppingListManager.getShoppingList(shoppingListId);
+   @GetMapping(value="/shopping-lists/{shoppingListId}")
+    public void shoppingSummary(@PathVariable UUID shoppingListId){
+        logger.info(String.valueOf(shoppingListId));
+        shoppingListService.getShoppingList(shoppingListId);
     }
 }

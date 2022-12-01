@@ -1,16 +1,20 @@
-package com.ezgroceries.shoppinglist.classes;
+package com.ezgroceries.shoppinglist.entities;
 import java.util.List;
+import java.util.UUID;
+import java.util.stream.Stream;
 
-public class Cocktail {
+public class CocktailResource {
+
+
     private String cocktailId;
+    private String idDrink;
     private String name;
+    private List<String> ingredients;
     private String glass;
     private String instructions;
     private String image;
-    private List<String>ingredients;
 
-
-    public Cocktail(String cocktailId, String name, String glass, String instructions, String image, List<String> ingredients){
+    public CocktailResource(String cocktailId, String name, String glass, String instructions, String image, List<String> ingredients) {
         this.cocktailId = cocktailId;
         this.name = name;
         this.glass = glass;
@@ -19,8 +23,11 @@ public class Cocktail {
         this.ingredients = ingredients;
     }
 
-    public Cocktail() {
+    public CocktailResource() {
 
+    }
+
+    public CocktailResource(UUID cocktailId, String strDrink, String strGlass, String strInstructions, String strDrinkThumb, List<String> ingredients) {
     }
 
 
@@ -72,5 +79,16 @@ public class Cocktail {
         this.ingredients = ingredients;
     }
 
+    public String getIdDrink() {
+        return idDrink;
+    }
 
+    public void setIdDrink(String id_drink) {
+        this.idDrink = id_drink;
+    }
+
+    public Stream stream() {
+        return null;
+    }
 }
+

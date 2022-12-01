@@ -1,8 +1,9 @@
-package com.ezgroceries.shoppinglist.classes;
+package com.ezgroceries.shoppinglist.entities;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.List;
 
     public class CocktailDBResponse {
@@ -92,6 +93,14 @@ import java.util.List;
 
         public void setStrIngredient3(String strIngredient3) {
             this.strIngredient3 = strIngredient3;
+        }
+
+        public List<String> getIngredients(DrinkResource drinkResource) {
+            return Arrays.asList(strIngredient1,strIngredient2,strIngredient3);
+        }
+
+        public List<String> getIngredients() {
+            return Arrays.asList(strIngredient1,strIngredient2,strIngredient3);
         }
     }
     //other methods here
