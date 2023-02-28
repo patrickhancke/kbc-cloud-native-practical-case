@@ -1,9 +1,8 @@
 package com.ezgroceries.shoppinglist;
 
+import com.ezgroceries.shoppinglist.cocktail.CocktailDTO;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
@@ -24,4 +23,14 @@ private final ShoppingListService shoppingListService;
                 .buildAndExpand(newShoppingListId).toUri();
         return ResponseEntity.created(location).build();
     }
+
+    @PostMapping(value="/shopping-lists/{shoppingListId}/cocktails")
+    public ResponseEntity<Void> addCocktailIngredientsToList(@PathVariable UUID shoppingListId, @RequestBody CocktailDTO cocktailDTO){
+
+        shoppingListService.addIngredientsFromCocktail(shoppingListId,cocktailDTO);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{shoppingListId}")
+                .buildAndExpand(newShoppingListId).toUri();
+        return ResponseEntity.created(location).build();
+    }
+
 }

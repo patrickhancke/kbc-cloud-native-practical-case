@@ -1,5 +1,6 @@
 package com.ezgroceries.shoppinglist;
 
+import com.ezgroceries.shoppinglist.cocktail.CocktailDTO;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -21,5 +22,9 @@ public class ShoppingListService {
         */
         UUID shoppingListId= UUID.fromString("90689338-499a-4c49-af90-f1e73068ad4f");
          return shoppingListId;
+    }
+
+    public UUID addIngredientsFromCocktail(UUID shoppingListId, CocktailDTO cocktailDTO) {
+        return shoppingListId;
     }
 }
