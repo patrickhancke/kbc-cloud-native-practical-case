@@ -1,4 +1,4 @@
-package com.ezgroceries.shoppinglist.Cocktail;
+package com.ezgroceries.shoppinglist.cocktail;
 
 import org.springframework.stereotype.Service;
 
