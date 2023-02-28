@@ -1,3 +1,4 @@
+/*
 package com.ezgroceries.shoppinglist;
 
 import org.springframework.data.repository.CrudRepository;
@@ -8,3 +9,5 @@ import java.util.UUID;
 @Repository
 public interface ShoppingListRepository extends CrudRepository<ShoppingList, UUID> {
 }
+*/
+
