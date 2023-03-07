@@ -17,6 +17,6 @@ public class CocktailDTO {
     private String glass;
     private String instructions;
     private String image;
-    private List<String> ingredients;
+    private List<Ingredient> ingredients;
 
 }
