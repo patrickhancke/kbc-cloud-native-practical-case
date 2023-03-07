@@ -4,6 +4,7 @@ import com.ezgroceries.shoppinglist.cocktail.CocktailDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -18,8 +19,8 @@ private final ShoppingListService shoppingListService;
     }
 
     @PostMapping(value="/shopping-lists")
-    public ResponseEntity<Void> createShoppingList(@RequestBody ShoppingListIdDTO shoppingListIdDTO){
-        UUID newShoppingListId = shoppingListService.createNewList(shoppingListIdDTO);
+    public ResponseEntity<Void> createShoppingList(@RequestBody ShoppingListNameDTO shoppingListNameDTO){
+        UUID newShoppingListId = shoppingListService.createNewList(shoppingListNameDTO);
         URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{shoppingListId}")
                 .buildAndExpand(newShoppingListId).toUri();
         return ResponseEntity.created(location).build();
@@ -29,9 +30,7 @@ private final ShoppingListService shoppingListService;
     public ResponseEntity<Void> addCocktailIngredientsToList(@PathVariable UUID shoppingListId, @RequestBody CocktailDTO cocktailDTO){
 
         UUID createdShoppingListId = shoppingListService.addIngredientsFromCocktail(shoppingListId, cocktailDTO);
-
-        URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{shoppingListId}")
-                .buildAndExpand(createdShoppingListId).toUri();
+        URI location = ServletUriComponentsBuilder.fromCurrentRequestUri().build().toUri();
         return ResponseEntity.created(location).build();
     }
 
@@ -41,7 +40,7 @@ private final ShoppingListService shoppingListService;
         return ResponseEntity.ok(shoppingListDTO);
     }
     @GetMapping(value="/shopping-lists")
-    public ResponseEntity<List<ShoppingListDTO>> getAllShoppingList(@PathVariable UUID shoppingListId){
+    public ResponseEntity<List<ShoppingListDTO>> getAllShoppingList(){
         List<ShoppingListDTO> shoppingListDTOS = shoppingListService.getAllShoppingList();
         return ResponseEntity.ok(shoppingListDTOS);
     }

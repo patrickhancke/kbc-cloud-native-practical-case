@@ -4,6 +4,7 @@ package com.ezgroceries.shoppinglist.cocktail;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,9 +20,9 @@ private static final Logger log = LoggerFactory.getLogger(CocktailControler.clas
     }
 
     @GetMapping(value="/cocktails")
-    public @ResponseBody List<CocktailDTO> getCocktails(@RequestParam String search){
+    public ResponseEntity<List<CocktailDTO>> getCocktails(@RequestParam String search){
         List<CocktailDTO> cocktailDTOList = cocktailService.getCocktails(search);
         log.info("CocktailList for " + search + "found");
-        return cocktailDTOList;
+        return ResponseEntity.ok(cocktailDTOList);
     }
 }
