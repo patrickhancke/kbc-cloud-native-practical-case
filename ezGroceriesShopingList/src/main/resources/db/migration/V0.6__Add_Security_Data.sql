@@ -1,0 +1,5 @@
+insert into USERS (USERNAME, PASSWORD, ENABLED) VALUES ('Eminem', 'password', TRUE);
+insert into USERS (USERNAME, PASSWORD, ENABLED) VALUES ('John', 'password', TRUE);
+
+insert into AUTHORITIES(USERNAME, AUTHORITY) VALUES ('Eminem', 'USER_ROLE');
+insert into AUTHORITIES(USERNAME, AUTHORITY) VALUES ('John', 'USER_ROLE');
